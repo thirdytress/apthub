@@ -155,18 +155,39 @@ class Database {
     // ===========================
     // Apartment Functions
     // ===========================
-    public function addApartment($name, $type, $location, $description, $monthly_rate, $image, $status='Available') {
-        $stmt = $this->connect()->prepare("INSERT INTO apartments (Name, Type, Location, Description, MonthlyRate, Image, Status) 
-                                           VALUES (:name, :type, :location, :description, :rate, :image, :status)");
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':type', $type);
-        $stmt->bindParam(':location', $location);
-        $stmt->bindParam(':description', $description);
-        $stmt->bindParam(':rate', $monthly_rate);
-        $stmt->bindParam(':image', $image);
-        $stmt->bindParam(':status', $status);
-        return $stmt->execute();
-    }
+    public function addApartment($name, $type, $location, $description, $monthly_rate) {
+    $sql = "INSERT INTO apartments (Name, Type, Location, Description, MonthlyRate, Status, DateAdded)
+            VALUES (:name, :type, :location, :description, :monthly_rate, 'Available', NOW())";
+
+    $stmt = $this->connect()->prepare($sql);
+    $stmt->bindParam(':name', $name);
+    $stmt->bindParam(':type', $type);
+    $stmt->bindParam(':location', $location);
+    $stmt->bindParam(':description', $description);
+    $stmt->bindParam(':monthly_rate', $monthly_rate);
+    $stmt->execute();
+
+    return $this->connect()->lastInsertId(); // get the new ApartmentID
+}
+
+public function addApartmentImage($apartment_id, $image_path) {
+    $sql = "INSERT INTO apartment_images (apartment_id, image_path) VALUES (:apartment_id, :image_path)";
+    $stmt = $this->connect()->prepare($sql);
+    $stmt->bindParam(':apartment_id', $apartment_id);
+    $stmt->bindParam(':image_path', $image_path);
+    $stmt->execute();
+}
+
+public function getApartmentImages($apartment_id) {
+    $sql = "SELECT image_path FROM apartment_images WHERE apartment_id = :id";
+    $stmt = $this->connect()->prepare($sql);
+    $stmt->bindParam(':id', $apartment_id);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+
 
     public function getAllApartments() {
         $stmt = $this->connect()->prepare("SELECT * FROM apartments ORDER BY Name ASC");

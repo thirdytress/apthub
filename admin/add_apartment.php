@@ -15,17 +15,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $location = trim($_POST['location']);
     $description = trim($_POST['description']);
     $monthly_rate = trim($_POST['monthly_rate']);
-    $image = null;
 
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-        $image = 'uploads/' . uniqid() . '.' . $ext;
-        move_uploaded_file($_FILES['image']['tmp_name'], '../' . $image);
+    // Insert apartment first
+    $apartment_id = $db->addApartment($name, $type, $location, $description, $monthly_rate);
+
+    // Handle multiple image uploads
+    if (isset($_FILES['images']) && count($_FILES['images']['name']) > 0) {
+        $uploadDir = '../uploads/';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+
+        foreach ($_FILES['images']['name'] as $key => $filename) {
+            if ($_FILES['images']['error'][$key] == 0) {
+                $ext = pathinfo($filename, PATHINFO_EXTENSION);
+                $uniqueName = uniqid() . '.' . $ext;
+                $imagePath = 'uploads/' . $uniqueName;
+                move_uploaded_file($_FILES['images']['tmp_name'][$key], '../' . $imagePath);
+
+                // Save each image to apartment_images table
+                $db->addApartmentImage($apartment_id, $imagePath);
+            }
+        }
     }
 
-    $db->addApartment($name, $type, $location, $description, $monthly_rate, $image);
-    echo "<script>alert('Apartment added successfully!'); window.location.href='dashboard.php';</script>";
+    echo "<script>alert('Apartment and images added successfully!'); window.location.href='dashboard.php';</script>";
 }
+
 ?>
 
 
@@ -68,9 +82,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="number" step="0.01" name="monthly_rate" class="form-control" required>
                 </div>
                 <div class="mb-3">
-                    <label>Image</label>
-                    <input type="file" name="image" class="form-control">
-                </div>
+    <label>Upload Apartment Images</label>
+    <input type="file" name="images[]" class="form-control" multiple required>
+    <small class="text-muted">You can select multiple images</small>
+</div>
+
                 <button type="submit" class="btn btn-success w-100">Add Apartment</button>
                 <a href="dashboard.php" class="btn btn-secondary w-100 mt-2">Cancel</a>
             </form>

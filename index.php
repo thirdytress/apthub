@@ -143,6 +143,43 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
       margin-top: 80px;
       border-top: 3px solid var(--accent-gold);
     }
+    :root {
+      --primary-dark: #2c3e50;
+      --primary-blue: #3498db;
+      --accent-gold: #d4af37;
+      --warm-beige: #f5f1e8;
+      --soft-gray: #95a5a6;
+      --deep-navy: #1a252f;
+      --luxury-gold: #c9a961;
+      --earth-brown: #8b7355;
+    }
+    body {
+      background: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 50%, #f5f1e8 100%);
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+    }
+    .navbar { background: linear-gradient(135deg, var(--deep-navy), var(--primary-dark)); border-bottom: 3px solid var(--accent-gold); }
+    .navbar-brand { color: white !important; font-weight: 700; }
+    .nav-link { color: rgba(255,255,255,0.8) !important; transition: .3s; }
+    .nav-link:hover { color: var(--accent-gold) !important; }
+    .hero { text-align: center; padding: 120px 20px; }
+    .hero h1 { font-weight: 800; font-size: 3rem; color: var(--primary-dark); }
+    .hero p { font-size: 1.3rem; color: var(--earth-brown); margin: 20px 0 30px; }
+    .hero .btn { background: linear-gradient(135deg, var(--accent-gold), var(--luxury-gold)); border: none; color: var(--deep-navy); font-weight: 700; padding: 12px 40px; border-radius: 25px; }
+    .apartment-card { border-radius: 20px; overflow: hidden; transition: transform 0.2s ease-in-out; max-width: 280px; margin: 0 auto; }
+    .apartment-card:hover { transform: scale(1.03); }
+    .apartment-card img { height: 180px; object-fit: cover; }
+    .card-body { padding: 15px; font-size: 14px; }
+    .card-title { font-size: 16px; font-weight: 600; }
+    .card-text { font-size: 13px; }
+    .btn-success { font-size: 13px; padding: 6px 10px; border-radius: 10px; }
+    h2.text-primary { font-size: 26px; text-align: center; font-weight: 700; }
+    .apartment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; justify-items: center; }
+    section.container { max-width: 1000px; }
+    footer { background: linear-gradient(135deg, var(--deep-navy), var(--primary-dark)); color: white; text-align: center; padding: 30px; margin-top: 80px; border-top: 3px solid var(--accent-gold); }
+  </style>
+</head>
+<body></body>
   </style>
 </head>
 <body>
@@ -174,7 +211,7 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 </section>
 
-<!-- APARTMENTS -->
+<!-- 🏢 UPDATED AVAILABLE APARTMENTS SECTION -->
 <section class="container mt-5">
   <h2 class="mb-4 text-primary fw-bold">Available Apartments</h2>
   <div id="message-area"></div>
@@ -182,17 +219,17 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <?php if ($apartments): ?>
       <?php foreach ($apartments as $apt): ?>
+        <?php
+          // Fetch images for this apartment
+          $imgStmt = $conn->prepare("SELECT image_path FROM apartment_images WHERE apartment_id = :id");
+          $imgStmt->bindParam(':id', $apt['ApartmentID']);
+          $imgStmt->execute();
+          $images = $imgStmt->fetchAll(PDO::FETCH_ASSOC);
+          $firstImage = $images[0]['image_path'] ?? 'images/default.jpg';
+        ?>
         <div class="col-md-4 mb-4">
-          <div class="card apartment-card clickable-card"
-               data-bs-toggle="modal"
-               data-bs-target="#apartmentModal"
-               data-name="<?= htmlspecialchars($apt['Name']) ?>"
-               data-description="<?= htmlspecialchars($apt['Description']) ?>"
-               data-rate="<?= number_format($apt['MonthlyRate'],2) ?>"
-               data-image="<?= htmlspecialchars($apt['Image'] ?: 'images/airbnb1.jpg') ?>">
-
-            <img src="<?= htmlspecialchars($apt['Image'] ?: 'images/airbnb1.jpg') ?>" alt="<?= htmlspecialchars($apt['Name']) ?>">
-
+          <div class="card apartment-card" data-bs-toggle="modal" data-bs-target="#apartmentModal<?= $apt['ApartmentID'] ?>">
+            <img src="<?= htmlspecialchars($firstImage) ?>" alt="<?= htmlspecialchars($apt['Name']) ?>">
             <div class="card-body d-flex flex-column">
               <h5 class="card-title"><?= htmlspecialchars($apt['Name']) ?></h5>
               <p class="card-text"><?= htmlspecialchars($apt['Description']) ?></p>
@@ -206,32 +243,50 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
           </div>
         </div>
+
+        <!-- Apartment Modal with Carousel -->
+        <div class="modal fade" id="apartmentModal<?= $apt['ApartmentID'] ?>" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-4 shadow-lg">
+              <div class="modal-header border-0">
+                <h5 class="modal-title"><?= htmlspecialchars($apt['Name']) ?></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body p-0">
+                <?php if ($images): ?>
+                  <div id="carousel<?= $apt['ApartmentID'] ?>" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                      <?php foreach ($images as $index => $img): ?>
+                        <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+                          <img src="<?= htmlspecialchars($img['image_path']) ?>" class="d-block w-100" style="height:400px;object-fit:cover;">
+                        </div>
+                      <?php endforeach; ?>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel<?= $apt['ApartmentID'] ?>" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel<?= $apt['ApartmentID'] ?>" data-bs-slide="next">
+                      <span class="carousel-control-next-icon"></span>
+                    </button>
+                  </div>
+                <?php else: ?>
+                  <img src="images/default.jpg" class="img-fluid w-100" style="height:400px;object-fit:cover;">
+                <?php endif; ?>
+                <div class="p-4">
+                  <p><?= htmlspecialchars($apt['Description']) ?></p>
+                  <p><strong>Monthly Rate:</strong> ₱<?= number_format($apt['MonthlyRate'], 2) ?></p>
+                  <button class="btn btn-success w-100">Apply Now</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       <?php endforeach; ?>
     <?php else: ?>
       <p class="text-muted">No apartments available right now. Please check back later.</p>
     <?php endif; ?>
   </div>
 </section>
-
-<!-- APARTMENT MODAL -->
-<div class="modal fade" id="apartmentModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content rounded-4 shadow-lg">
-      <div class="modal-header border-0">
-        <h5 class="modal-title" id="apartmentModalLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body p-0">
-        <img id="apartmentModalImage" src="" class="img-fluid w-100" alt="Apartment Image">
-        <div class="p-4">
-          <p id="apartmentModalDescription"></p>
-          <p><strong>Monthly Rate:</strong> ₱<span id="apartmentModalRate"></span></p>
-          <button class="btn btn-success w-100" id="modalApplyBtn">Apply Now</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- LOGIN MODAL -->
 <div class="modal fade" id="loginModal" tabindex="-1">
