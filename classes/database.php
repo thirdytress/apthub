@@ -544,6 +544,23 @@ public function updatePaymentStatus($id, $status) {
     return $stmt->execute([$status, $id]);
 }
 
+// Update payment method and mark as paid
+public function updatePayment($payment_id, $method, $reference_number = null) {
+    $stmt = $this->connect()->prepare("
+        UPDATE payments 
+        SET status = 'Paid', 
+            payment_method = :method, 
+            reference_number = :ref, 
+            date_paid = NOW() 
+        WHERE payment_id = :pid
+    ");
+    $stmt->bindParam(':method', $method);
+    $stmt->bindParam(':ref', $reference_number);
+    $stmt->bindParam(':pid', $payment_id);
+    return $stmt->execute();
+}
+
+
 // Automatically generate next month’s billing
 public function generateMonthlyPayments() {
     $stmt = $this->connect()->prepare("
