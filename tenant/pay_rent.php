@@ -42,89 +42,225 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pay Rent | ApartmentHub</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-dark: #2c3e50;
+      --primary-blue: #3498db;
+      --accent-gold: #d4af37;
+      --warm-beige: #f5f1e8;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 50%, #f5f1e8 100%);
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Floating decorations */
+    .floating-decoration {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      border-radius: 50%;
+    }
+
+    .deco-1 {
+      top: 10%;
+      left: 5%;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.1), transparent);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .deco-2 {
+      bottom: 15%;
+      right: 8%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(52, 152, 219, 0.1), transparent);
+      animation: float 8s ease-in-out infinite reverse;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-25px); }
+    }
+
+    h2 {
+      font-weight: 700;
+      color: var(--primary-dark);
+      font-size: 2rem;
+      position: relative;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 80px;
+      height: 4px;
+      background: var(--accent-gold);
+      border-radius: 2px;
+    }
+
+    .card {
+      border: none;
+      border-radius: 25px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      background: linear-gradient(145deg, #ffffff 0%, #f8f5f0 100%);
+      border: 2px solid rgba(212, 175, 55, 0.2);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--primary-dark), var(--primary-blue), var(--accent-gold));
+      transform: scaleX(0);
+      transition: transform 0.5s ease;
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .table thead {
+      background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+      color: white;
+    }
+
+    .table tbody tr:hover {
+      background: rgba(212, 175, 55, 0.08);
+      transition: background 0.3s ease;
+    }
+
+    .badge {
+      font-size: 0.9rem;
+      padding: 0.5em 0.9em;
+      border-radius: 12px;
+    }
+
+    .badge.bg-success {
+      background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
+    }
+
+    .badge.bg-warning {
+      background: linear-gradient(135deg, #f39c12, #e67e22) !important;
+      color: white !important;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+      border: none;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+    }
+  </style>
 </head>
 <body>
+
+  <div class="floating-decoration deco-1"></div>
+  <div class="floating-decoration deco-2"></div>
+
   <div class="container mt-5">
-    <h2 class="mb-4 text-primary fw-bold">My Rent Payments</h2>
+    <h2 class="mb-4">My Rent Payments</h2>
 
     <?php if (isset($_GET['success'])): ?>
-      <div class="alert alert-success">✅ Payment successful!</div>
+      <div class="alert alert-success shadow-sm border-0">✅ Payment successful!</div>
     <?php elseif (isset($_GET['error'])): ?>
-      <div class="alert alert-danger">❌ Payment failed. Please try again.</div>
+      <div class="alert alert-danger shadow-sm border-0">❌ Payment failed. Please try again.</div>
     <?php endif; ?>
 
-    <table class="table table-bordered align-middle">
-      <thead class="table-light">
-        <tr>
-          <th>Apartment</th>
-          <th>Due Date</th>
-          <th>Amount</th>
-          <th>Status</th>
-          <th>Payment Method</th>
-          <th>Reference #</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php if ($payments): ?>
-          <?php foreach ($payments as $pay): ?>
+    <div class="card">
+      <div class="card-body p-0">
+        <table class="table table-bordered align-middle mb-0 text-center">
+          <thead>
             <tr>
-              <td><?= htmlspecialchars($pay['apartment_name']) ?></td>
-              <td><?= htmlspecialchars($pay['due_date']) ?></td>
-              <td>₱<?= number_format($pay['amount'], 2) ?></td>
-              <td>
-                <?php if ($pay['status'] === 'Paid'): ?>
-                  <span class="badge bg-success">Paid</span>
-                <?php else: ?>
-                  <span class="badge bg-warning text-dark">Pending</span>
-                <?php endif; ?>
-              </td>
-              <td><?= htmlspecialchars($pay['payment_method'] ?? '-') ?></td>
-              <td><?= htmlspecialchars($pay['reference_number'] ?? '-') ?></td>
-              <td>
-                <?php if ($pay['status'] !== 'Paid'): ?>
-                  <button class="btn btn-primary btn-sm pay-btn"
-                          data-id="<?= $pay['payment_id'] ?>"
-                          data-amount="<?= $pay['amount'] ?>"
-                          data-bs-toggle="modal"
-                          data-bs-target="#paymentModal">
-                    Pay
-                  </button>
-                <?php else: ?>
-                  <button class="btn btn-success btn-sm" disabled>Paid</button>
-                <?php endif; ?>
-              </td>
+              <th>Apartment</th>
+              <th>Due Date</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Payment Method</th>
+              <th>Reference #</th>
+              <th>Action</th>
             </tr>
-          <?php endforeach; ?>
-        <?php else: ?>
-          <tr>
-            <td colspan="7" class="text-center text-muted">No payment records found.</td>
-          </tr>
-        <?php endif; ?>
-      </tbody>
-    </table>
+          </thead>
+          <tbody>
+            <?php if ($payments): ?>
+              <?php foreach ($payments as $pay): ?>
+                <tr>
+                  <td><?= htmlspecialchars($pay['apartment_name']) ?></td>
+                  <td><?= htmlspecialchars($pay['due_date']) ?></td>
+                  <td>₱<?= number_format($pay['amount'], 2) ?></td>
+                  <td>
+                    <?php if ($pay['status'] === 'Paid'): ?>
+                      <span class="badge bg-success">Paid</span>
+                    <?php else: ?>
+                      <span class="badge bg-warning text-light">Pending</span>
+                    <?php endif; ?>
+                  </td>
+                  <td><?= htmlspecialchars($pay['payment_method'] ?? '-') ?></td>
+                  <td><?= htmlspecialchars($pay['reference_number'] ?? '-') ?></td>
+                  <td>
+                    <?php if ($pay['status'] !== 'Paid'): ?>
+                      <button class="btn btn-primary btn-sm pay-btn"
+                              data-id="<?= $pay['payment_id'] ?>"
+                              data-amount="<?= $pay['amount'] ?>"
+                              data-bs-toggle="modal"
+                              data-bs-target="#paymentModal">
+                        Pay
+                      </button>
+                    <?php else: ?>
+                      <button class="btn btn-success btn-sm" disabled>Paid</button>
+                    <?php endif; ?>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <tr>
+                <td colspan="7" class="text-center text-muted py-4">No payment records found.</td>
+              </tr>
+            <?php endif; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <!-- Payment Modal -->
   <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+      <div class="modal-content border-0 shadow-lg rounded-4">
         <form action="../actions/process_payment.php" method="POST" enctype="multipart/form-data">
-          <div class="modal-header">
-            <h5 class="modal-title" id="paymentModalLabel">Pay Rent</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header bg-gradient text-white" style="background: linear-gradient(135deg, var(--primary-dark), var(--primary-blue));">
+            <h5 class="modal-title fw-semibold" id="paymentModalLabel">Pay Rent</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
 
           <div class="modal-body">
             <input type="hidden" name="rent_id" id="rent_id">
 
             <div class="mb-3">
-              <label class="form-label">Amount to Pay</label>
+              <label class="form-label fw-semibold">Amount to Pay</label>
               <input type="text" class="form-control" id="amount" name="amount" readonly>
             </div>
 
             <div class="mb-3">
-              <label class="form-label">Payment Method</label>
+              <label class="form-label fw-semibold">Payment Method</label>
               <select class="form-select" name="payment_method" id="payment_method" required>
                 <option value="">Select method</option>
                 <option value="Cash">Cash</option>
@@ -134,12 +270,12 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <div id="gcashFields" style="display:none;">
               <div class="mb-3">
-                <label class="form-label">GCash Reference Number</label>
+                <label class="form-label fw-semibold">GCash Reference Number</label>
                 <input type="text" class="form-control" name="reference_number" placeholder="Enter GCash Ref No.">
               </div>
 
               <div class="mb-3">
-                <label class="form-label">Upload GCash Receipt (optional)</label>
+                <label class="form-label fw-semibold">Upload GCash Receipt (optional)</label>
                 <input type="file" class="form-control" name="gcash_receipt" accept="image/*">
               </div>
             </div>
@@ -164,7 +300,6 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
       const paymentMethod = document.getElementById('payment_method');
       const gcashFields = document.getElementById('gcashFields');
 
-      // Fill modal data when Pay is clicked
       payButtons.forEach(btn => {
         btn.addEventListener('click', () => {
           rentIdInput.value = btn.dataset.id;
@@ -174,7 +309,6 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
         });
       });
 
-      // Show/hide GCash fields dynamically
       paymentMethod.addEventListener('change', function() {
         gcashFields.style.display = this.value === 'GCash' ? 'block' : 'none';
       });
@@ -182,3 +316,4 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </script>
 </body>
 </html>
+
