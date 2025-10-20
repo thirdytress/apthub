@@ -371,8 +371,6 @@ public function rejectApplication($application_id) {
 }
 
 
-    
-
     public function countLeases() {
         $stmt = $this->connect()->query("SELECT COUNT(*) as cnt FROM leases");
         return $stmt->fetch(PDO::FETCH_ASSOC)['cnt'] ?? 0;
