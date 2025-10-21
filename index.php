@@ -4,11 +4,12 @@ require_once "classes/database.php";
 $db = new Database();
 $conn = $db->connect();
 
-// Fetch only available apartments
-$stmt = $conn->prepare("SELECT * FROM apartments WHERE Status = 'Available' ORDER BY DateAdded DESC");
+// Fetch ALL apartments (Available and Occupied)
+$stmt = $conn->prepare("SELECT * FROM apartments ORDER BY DateAdded DESC");
 $stmt->execute();
 $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -214,7 +215,7 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <!-- AVAILABLE APARTMENTS SECTION -->
 <section class="container mt-5">
-  <h2 class="mb-4 text-primary fw-bold">Available Apartments</h2>
+  <h2 class="mb-4 text-primary fw-bold">All Apartments</h2>
   <div id="message-area"></div>
   <div class="apartment-grid">
 
@@ -227,15 +228,23 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
           $imgStmt->execute();
           $images = $imgStmt->fetchAll(PDO::FETCH_ASSOC);
           $firstImage = $images[0]['image_path'] ?? 'images/default.jpg';
+          $isOccupied = ($apt['Status'] === 'Occupied');
         ?>
         <div class="apartment-card" data-bs-toggle="modal" data-bs-target="#apartmentModal<?= $apt['ApartmentID'] ?>">
           <img src="<?= htmlspecialchars($firstImage) ?>" alt="<?= htmlspecialchars($apt['Name']) ?>">
           <div class="card-body">
-            <h5 class="card-title"><?= htmlspecialchars($apt['Name']) ?></h5>
+            <h5 class="card-title d-flex justify-content-between align-items-center">
+              <?= htmlspecialchars($apt['Name']) ?>
+              <?php if ($isOccupied): ?>
+                <span class="badge bg-danger">Occupied</span>
+              <?php endif; ?>
+            </h5>
             <p class="card-text"><?= htmlspecialchars($apt['Description']) ?></p>
             <p class="card-text"><strong>Monthly Rate:</strong> ₱<?= number_format($apt['MonthlyRate'], 2) ?></p>
 
-            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'tenant'): ?>
+            <?php if ($isOccupied): ?>
+              <button class="btn btn-secondary btn-sm" disabled>Currently Occupied</button>
+            <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'tenant'): ?>
               <a href="tenant/view_apartments.php" class="btn btn-success btn-sm" onclick="event.stopPropagation();">Apply Now</a>
             <?php else: ?>
               <button class="btn btn-success btn-sm require-login-apply" data-next="tenant/view_apartments.php" data-bs-toggle="modal" data-bs-target="#loginModal" onclick="event.stopPropagation();">Apply Now</button>
@@ -274,7 +283,9 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="p-4">
                   <p><?= htmlspecialchars($apt['Description']) ?></p>
                   <p><strong>Monthly Rate:</strong> ₱<?= number_format($apt['MonthlyRate'], 2) ?></p>
-                  <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'tenant'): ?>
+                  <?php if ($isOccupied): ?>
+                    <button class="btn btn-secondary w-100" disabled>Currently Occupied</button>
+                  <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'tenant'): ?>
                     <a href="tenant/view_apartments.php" class="btn btn-success w-100" onclick="event.stopPropagation();">Apply Now</a>
                   <?php else: ?>
                     <button class="btn btn-success w-100 require-login-apply" data-next="tenant/view_apartments.php" onclick="event.stopPropagation();" data-bs-toggle="modal" data-bs-target="#loginModal">Apply Now</button>
@@ -290,6 +301,7 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php endif; ?>
   </div>
 </section>
+
 
 <!-- LOGIN MODAL -->
 <div class="modal fade" id="loginModal" tabindex="-1">
@@ -549,4 +561,4 @@ $(function() {
 });
 </script>
 </body>
-</html>
+</html> 

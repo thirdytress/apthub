@@ -10,7 +10,11 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'tenant') {
 
 $db = new Database();
 $tenant_id = $_SESSION['user_id'];
-$apartments = $db->getAvailableApartments($tenant_id);
+// Show available apartments the same way as index.php (all with Status = 'Available')
+$conn = $db->connect();
+$stmt = $conn->prepare("SELECT * FROM apartments WHERE Status = 'Available' ORDER BY DateAdded DESC");
+$stmt->execute();
+$apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $leases = $db->getTenantLeases($tenant_id);
 ?>
 <!DOCTYPE html>
@@ -443,10 +447,11 @@ $leases = $db->getTenantLeases($tenant_id);
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 shadow-sm" data-bs-toggle="modal" data-bs-target="#apartmentModal<?= $a['ApartmentID'] ?>">
                         <img src="../<?= htmlspecialchars($firstImage) ?>" class="card-img-top" alt="<?= htmlspecialchars($a['Name']) ?>">
-                        <div class="card-body d-flex flex-column">
-                            <h5><?= htmlspecialchars($a['Name']) ?></h5>
-                            <p><?= htmlspecialchars($a['Location']) ?></p>
-                            <p><strong>₱<?= number_format($a['MonthlyRate'], 2) ?>/month</strong></p>
+            <div class="card-body d-flex flex-column">
+              <h5><?= htmlspecialchars($a['Name']) ?></h5>
+              <p class="mb-1 text-muted"><?= htmlspecialchars($a['Location']) ?></p>
+              <p class="flex-grow-1"><?= htmlspecialchars($a['Description']) ?></p>
+              <p class="mt-2"><strong>₱<?= number_format($a['MonthlyRate'], 2) ?>/month</strong></p>
 
                             <?php if ($_SESSION['role'] === 'tenant'): ?>
                                 <button class="btn btn-primary mt-auto w-100 apply-btn" data-apartment="<?= $a['ApartmentID'] ?>">Apply</button>
@@ -549,18 +554,18 @@ $(document).ready(function(){
         var btn = $(this);
         var apartmentID = btn.data('apartment');
 
-        $.ajax({
-            url: 'apply_ajax.php',
-            method: 'POST',
-            data: { apartment_id: apartmentID },
-            success: function(response){
-                $('#message-area').html('<div class="alert alert-info">'+response+'</div>');
-                btn.prop('disabled', true).text('Applied');
-            },
-            error: function(){
-                $('#message-area').html('<div class="alert alert-danger">Something went wrong. Try again.</div>');
-            }
-        });
+    $.ajax({
+      url: 'apply_ajax.php',
+      method: 'POST',
+      data: { apartment_id: apartmentID },
+      success: function(response){
+        // On success, go to My Applications page
+        window.location.href = 'my_applications.php';
+      },
+      error: function(){
+        $('#message-area').html('<div class="alert alert-danger">Something went wrong. Try again.</div>');
+      }
+    });
     });
 });
 </script>

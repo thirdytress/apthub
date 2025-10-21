@@ -9,6 +9,13 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'tenant') {
 
 $db = new Database();
 $applications = $db->getTenantApplications($_SESSION['user_id']);
+
+// One-time popup if user attempted to apply again after a rejection
+$showRejectedPopup = false;
+if (!empty($_SESSION['apply_rejected'])) {
+  $showRejectedPopup = true;
+  unset($_SESSION['apply_rejected']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -368,5 +375,18 @@ $applications = $db->getTenantApplications($_SESSION['user_id']);
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<?php if ($showRejectedPopup): ?>
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    Swal.fire({
+      icon: 'warning',
+      title: 'Application Rejected',
+      text: 'Your application was rejected before, so you cannot apply again for this apartment.',
+      confirmButtonColor: '#3498db'
+    });
+  });
+  </script>
+<?php endif; ?>
 </body>
 </html>
