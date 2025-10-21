@@ -194,49 +194,132 @@ $utilities = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="container mt-5">
   <h2 class="mb-4"><i class="bi bi-lightning-charge me-2"></i>My Utility Bills</h2>
 
+  <?php if (isset($_SESSION['message'])): ?>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <?= htmlspecialchars($_SESSION['message']) ?>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <?php unset($_SESSION['message']); ?>
+<?php endif; ?>
+
+
   <div class="card">
     <div class="card-body table-responsive p-0">
       <table class="table table-bordered table-hover align-middle text-center mb-0">
         <thead class="table-light">
-          <tr>
-            <th>Month</th>
-            <th>Electricity (kWh)</th>
-            <th>Water (m³)</th>
-            <th>Electricity Bill</th>
-            <th>Water Bill</th>
-            <th>Total Bill</th>
-            <th>Status</th>
-            <th>Generated</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php if ($utilities): ?>
-            <?php foreach ($utilities as $u): ?>
-            <tr>
-              <td><?= htmlspecialchars($u['month_year']) ?></td>
-              <td><?= $u['electricity_usage'] ?></td>
-              <td><?= $u['water_usage'] ?></td>
-              <td>₱<?= number_format($u['electricity_bill'], 2) ?></td>
-              <td>₱<?= number_format($u['water_bill'], 2) ?></td>
-              <td><strong>₱<?= number_format($u['total_bill'], 2) ?></strong></td>
-              <td>
-                <span class="badge bg-<?= $u['status'] === 'Paid' ? 'success' : 'warning' ?>">
-                  <?= $u['status'] ?>
-                </span>
-              </td>
-              <td><?= date('M d, Y', strtotime($u['created_at'])) ?></td>
-            </tr>
-            <?php endforeach; ?>
+  <tr>
+    <th>Type</th>
+    <th>Amount (₱)</th>
+    <th>Due Date</th>
+    <th>Status</th>
+    <th>Payment Method</th>
+    <th>Created At</th>
+    <th>Action</th>
+  </tr>
+</thead>
+
+>
+<tbody>
+  <?php if ($utilities): ?>
+    <?php foreach ($utilities as $u): ?>
+      <tr>
+        <td><?= htmlspecialchars($u['type']) ?></td>
+        <td><strong>₱<?= number_format($u['amount'], 2) ?></strong></td>
+        <td><?= htmlspecialchars($u['due_date']) ?></td>
+        <td>
+          <span class="badge bg-<?= $u['status'] === 'Paid' ? 'success' : ($u['status'] === 'Pending' ? 'warning' : 'secondary') ?>">
+            <?= htmlspecialchars($u['status']) ?>
+          </span>
+        </td>
+        <td><?= htmlspecialchars($u['payment_method'] ?? '—') ?></td>
+        <td><?= date('M d, Y', strtotime($u['created_at'])) ?></td>
+        <td>
+          <?php if ($u['status'] === 'Unpaid'): ?>
+            <button 
+              class="btn btn-sm btn-success pay-btn" 
+              data-id="<?= $u['id'] ?>"
+              data-type="<?= htmlspecialchars($u['type']) ?>"
+              data-amount="<?= number_format($u['amount'], 2) ?>"
+            >
+              <i class="bi bi-credit-card"></i> Pay
+            </button>
           <?php else: ?>
-            <tr>
-              <td colspan="8" class="text-muted py-4">No utility records found.</td>
-            </tr>
+            <span class="text-muted">—</span>
           <?php endif; ?>
-        </tbody>
+        </td>
+      </tr>
+    <?php endforeach; ?>
+  <?php else: ?>
+    <tr>
+      <td colspan="7" class="text-muted py-4">No utility records found.</td>
+    </tr>
+  <?php endif; ?>
+</tbody>
+
+
+
       </table>
     </div>
   </div>
 </div>
 
+<!-- 💳 Payment Confirmation Modal -->
+<div class="modal fade" id="payModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="POST" action="pay_utility.php">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title"><i class="bi bi-credit-card"></i> Pay Utility Bill</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="utility_id" id="utility_id">
+
+          <div class="mb-3">
+            <label class="form-label">Utility Type</label>
+            <input type="text" class="form-control" id="utility_type" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Amount to Pay</label>
+            <input type="text" class="form-control" id="utility_amount" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Payment Method</label>
+            <select class="form-select" name="payment_method" required>
+              <option value="" selected disabled>Select payment method</option>
+              <option value="GCash">GCash</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+              <option value="Cash">Cash</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-success">Confirm Payment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const payButtons = document.querySelectorAll('.pay-btn');
+  const payModal = new bootstrap.Modal(document.getElementById('payModal'));
+
+  payButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('utility_id').value = btn.dataset.id;
+      document.getElementById('utility_type').value = btn.dataset.type;
+      document.getElementById('utility_amount').value = '₱' + btn.dataset.amount;
+      payModal.show();
+    });
+  });
+</script>
+
+
 </body>
+
 </html>
