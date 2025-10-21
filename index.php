@@ -40,6 +40,9 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
       background: linear-gradient(135deg, var(--deep-navy), var(--primary-dark));
       border-bottom: 3px solid var(--accent-gold);
     }
+    .navbar .navbar-toggler {
+      border-color: rgba(255,255,255,0.35);
+    }
 
     .navbar-brand {
       color: white !important;
@@ -57,19 +60,20 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     .hero {
       text-align: center;
-      padding: 120px 20px;
+      padding: 100px 20px 60px;
     }
 
     .hero h1 {
       font-weight: 800;
-      font-size: 3rem;
+      font-size: clamp(2rem, 3.5vw, 3rem);
       color: var(--primary-dark);
     }
 
     .hero p {
-      font-size: 1.3rem;
+      font-size: clamp(1rem, 1.8vw, 1.3rem);
       color: var(--earth-brown);
-      margin: 20px 0 30px;
+      margin: 20px auto 24px;
+      max-width: 900px;
     }
 
     .hero .btn {
@@ -80,6 +84,8 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
       padding: 12px 40px;
       border-radius: 25px;
     }
+
+    
 
     .apartment-card {
       border-radius: 20px;
@@ -97,6 +103,8 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     .apartment-card img {
       height: 200px;
+      width: 100%;
+      display: block;
       object-fit: cover;
     }
 
@@ -178,7 +186,7 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg sticky-top">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
   <div class="container">
     <a class="navbar-brand" href="#">ApartmentHub</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -188,7 +196,7 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <ul class="navbar-nav">
         <li class="nav-item mx-2"><a class="nav-link active" href="#">Home</a></li>
         <li class="nav-item mx-2"><a class="nav-link" href="about.php">About</a></li>
-        <li class="nav-item mx-2"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a></li>
+  <li class="nav-item mx-2"><a class="nav-link nav-login-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a></li>
         <li class="nav-item mx-2"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Register</a></li>
       </ul>
     </div>
@@ -228,9 +236,9 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <p class="card-text"><strong>Monthly Rate:</strong> ₱<?= number_format($apt['MonthlyRate'], 2) ?></p>
 
             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'tenant'): ?>
-              <button class="btn btn-success btn-sm apply-btn" data-apartment="<?= $apt['ApartmentID'] ?>" onclick="event.stopPropagation();">Apply Now</button>
+              <a href="tenant/view_apartments.php" class="btn btn-success btn-sm" onclick="event.stopPropagation();">Apply Now</a>
             <?php else: ?>
-              <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal" onclick="event.stopPropagation();">Apply Now</button>
+              <button class="btn btn-success btn-sm require-login-apply" data-next="tenant/view_apartments.php" data-bs-toggle="modal" data-bs-target="#loginModal" onclick="event.stopPropagation();">Apply Now</button>
             <?php endif; ?>
           </div>
         </div>
@@ -266,7 +274,11 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="p-4">
                   <p><?= htmlspecialchars($apt['Description']) ?></p>
                   <p><strong>Monthly Rate:</strong> ₱<?= number_format($apt['MonthlyRate'], 2) ?></p>
-                  <button class="btn btn-success w-100">Apply Now</button>
+                  <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'tenant'): ?>
+                    <a href="tenant/view_apartments.php" class="btn btn-success w-100" onclick="event.stopPropagation();">Apply Now</a>
+                  <?php else: ?>
+                    <button class="btn btn-success w-100 require-login-apply" data-next="tenant/view_apartments.php" onclick="event.stopPropagation();" data-bs-toggle="modal" data-bs-target="#loginModal">Apply Now</button>
+                  <?php endif; ?>
                 </div>
               </div>
             </div>
@@ -289,6 +301,7 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </div>
       <div class="modal-body">
         <form id="loginForm">
+          <input type="hidden" name="next" id="loginNext" value="">
           <div class="mb-3">
             <label>Username or Email</label>
             <input type="text" class="form-control" name="username" required>
@@ -433,7 +446,8 @@ $('#loginForm').on('submit', function(e) {
           timer: 2000,
           showConfirmButton: false
         }).then(() => {
-          window.location.href = response.redirect;
+          var next = $('#loginNext').val();
+          window.location.href = next && next.length ? next : response.redirect;
         });
       } else {
         Swal.fire({
@@ -520,6 +534,17 @@ $(function() {
         Swal.fire('Invalid OTP', 'Please try again.', 'error');
       }
     });
+  });
+  
+  // If user clicks Apply while logged out, set the post-login redirect
+  $(document).on('click', '.require-login-apply', function(){
+    var next = $(this).data('next') || 'tenant/view_apartments.php';
+    $('#loginNext').val(next);
+  });
+
+  // If user opens Login from navbar, clear any pending redirect
+  $(document).on('click', '.nav-login-link', function(){
+    $('#loginNext').val('');
   });
 });
 </script>
