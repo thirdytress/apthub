@@ -42,6 +42,21 @@ $utilities = $stmt->fetchAll(PDO::FETCH_ASSOC);
       position: relative;
     }
 
+    .btn-outline-secondary {
+      border-radius: 20px;
+      border: 2px solid var(--accent-gold);
+      color: var(--accent-gold);
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline-secondary:hover {
+      background: var(--accent-gold);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(212,175,55,0.3);
+    }
+
     body::before {
       content: '';
       position: fixed;
@@ -168,6 +183,11 @@ $utilities = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
 
+<!-- ✅ Back Button (Top Right Corner) -->
+<a href="dashboard.php" class="btn btn-outline-secondary position-fixed top-0 end-0 m-4" style="z-index: 1000;">
+  <i class="bi bi-arrow-left me-1"></i>Back
+</a>
+
 <div class="floating-decoration deco-1"></div>
 <div class="floating-decoration deco-2"></div>
 
@@ -220,4 +240,3 @@ $utilities = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 </body>
 </html>
-

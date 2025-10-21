@@ -46,8 +46,8 @@ if (isset($_POST['action'])) {
       $mail->isSMTP();
       $mail->Host = 'smtp.gmail.com';
       $mail->SMTPAuth = true;
-      $mail->Username = 'martynjosephseloterio@gmail.com';
-      $mail->Password = 'urak cjjk jwbk vnao';
+      $mail->Username = 'jgarvia9@gmail.com';
+      $mail->Password = 'zswa rnsf tpqs yqzy';  
       $mail->SMTPSecure = 'tls';
       $mail->Port = 587;
       $mail->CharSet = 'UTF-8';
@@ -60,7 +60,7 @@ if (isset($_POST['action'])) {
         )
       );
 
-      $mail->setFrom('martynjosephseloterio@gmail.com', 'ApartmentHub');
+      $mail->setFrom('jgarvia9@gmail.com', 'ApartmentHub');
       $mail->addAddress($email, $firstname);
 
       $mail->isHTML(true);
@@ -192,8 +192,8 @@ if (isset($_POST['action'])) {
         $welcomeMail->isSMTP();
         $welcomeMail->Host = 'smtp.gmail.com';
         $welcomeMail->SMTPAuth = true;
-        $welcomeMail->Username = 'martynjosephseloterio@gmail.com';
-        $welcomeMail->Password = 'urak cjjk jwbk vnao';
+        $welcomeMail->Username = 'jgarvia9@gmail.com';
+        $welcomeMail->Password = 'zswa rnsf tpqs yqzy';
         $welcomeMail->SMTPSecure = 'tls';
         $welcomeMail->Port = 587;
         $welcomeMail->CharSet = 'UTF-8';
@@ -206,7 +206,7 @@ if (isset($_POST['action'])) {
           )
         );
 
-        $welcomeMail->setFrom('martynjosephseloterio@gmail.com', 'ApartmentHub');
+        $welcomeMail->setFrom('jgarvia9@gmail.com', 'ApartmentHub');
         $welcomeMail->addAddress($data['email'], $data['firstname']);
 
         $welcomeMail->isHTML(true);

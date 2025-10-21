@@ -133,6 +133,28 @@ $payments = $db->getTenantPayments($tenant_id);
       border-radius: 20px;
       overflow: hidden;
     }
+
+    /* Back button styling */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+      color: white;
+      font-weight: 500;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 18px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .back-btn:hover {
+      background: linear-gradient(135deg, var(--accent-gold), #b58e28);
+      color: #fff;
+      transform: translateY(-2px);
+    }
   </style>
 </head>
 <body>
@@ -140,7 +162,12 @@ $payments = $db->getTenantPayments($tenant_id);
   <div class="floating-decoration deco-2"></div>
 
   <div class="container py-5">
-    <h3 class="mb-4"><i class="bi bi-credit-card me-2 text-primary"></i>My Payments</h3>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3 class="mb-0"><i class="bi bi-credit-card me-2 text-primary"></i>My Payments</h3>
+      <a href="dashboard.php" class="back-btn">
+        <i class="bi bi-arrow-left-circle"></i> Back to Dashboard
+      </a>
+    </div>
 
     <?php if ($payments): ?>
       <div class="card">
@@ -183,4 +210,3 @@ $payments = $db->getTenantPayments($tenant_id);
   </div>
 </body>
 </html>
-

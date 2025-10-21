@@ -169,9 +169,37 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
     }
+
+    /* ✅ Aesthetic Back Button */
+    .btn-back {
+      position: fixed;
+      top: 25px;
+      right: 30px;
+      z-index: 1000;
+      background: white;
+      border: 2px solid var(--accent-gold);
+      color: var(--accent-gold);
+      border-radius: 30px;
+      font-weight: 600;
+      padding: 10px 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+      background: var(--accent-gold);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(212,175,55,0.4);
+    }
   </style>
 </head>
 <body>
+
+  <!-- ✅ Floating Aesthetic Back Button -->
+  <a href="dashboard.php" class="btn btn-back">
+    <i class="bi bi-arrow-left me-1"></i> Back
+  </a>
 
   <div class="floating-decoration deco-1"></div>
   <div class="floating-decoration deco-2"></div>

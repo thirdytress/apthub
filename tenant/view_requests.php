@@ -121,6 +121,23 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
       box-shadow: 0 4px 12px rgba(52,152,219,0.3);
     }
 
+    .btn-outline-secondary {
+  border-radius: 20px;
+  border: 2px solid var(--accent-gold);
+  color: var(--accent-gold);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+  background: var(--accent-gold);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212,175,55,0.3);
+}
+
+
+
     .card {
       border: none;
       border-radius: 25px;
@@ -195,10 +212,20 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="container mt-5">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2><i class="bi bi-wrench-adjustable me-2"></i>My Maintenance Requests</h2>
-    <a href="maintenance_request.php" class="btn btn-outline-primary">
-      <i class="bi bi-plus-lg me-1"></i>New Request
-    </a>
+
+    <div class="d-flex gap-2">
+      <!-- ✅ Back Button -->
+      <a href="dashboard.php" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Back
+      </a>
+
+      <!-- Existing New Request Button -->
+      <a href="maintenance_request.php" class="btn btn-outline-primary">
+        <i class="bi bi-plus-lg me-1"></i>New Request
+      </a>
+    </div>
   </div>
+
 
   <div class="card">
     <div class="card-body p-0">
@@ -241,6 +268,7 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
   </div>
 </div>
+
 
 </body>
 </html>
