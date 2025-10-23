@@ -59,10 +59,10 @@ try {
     // SMTP configuration
     $mail->SMTPDebug = 0;
     $mail->isSMTP();
-    $mail->Host = 'smtp.gmail.com';
+    $mail->Host = 'smtp.hostinger.com';
     $mail->SMTPAuth = true;
-    $mail->Username = 'jgarvia9@gmail.com';
-    $mail->Password = 'zswa rnsf tpqs yqzy';
+    $mail->Username = 'apthub@apartmenthub.online';
+    $mail->Password = 'Thirdy_090803';
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
     
@@ -75,7 +75,7 @@ try {
     );
 
     // Recipients
-    $mail->setFrom('martynjosephseloterio@gmail.com', 'ApartmentHub');
+    $mail->setFrom('apthub@apartmenthub.online', 'ApartmentHub');
     $mail->addAddress($user['email'], $user['firstname']);
 
     // Content

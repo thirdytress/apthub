@@ -1,9 +1,9 @@
 <?php
 class Database {
-    private $host = "localhost";
-    private $db_name = "apthub_db";
-    private $username = "root";
-    private $password = "";
+    private $host = 'mysql.hostinger.com';
+    private $db_name = "u725240554_apthub_db";
+    private $username = "u725240554_apartmenthub";
+    private $password = "Thirdy_090803";
     private $conn;
 
     public function connect() {

@@ -42,14 +42,14 @@ if (isset($_POST['action'])) {
     // Send OTP via email using PHPMailer
     $mail = new PHPMailer(true);
     try {
-      $mail->SMTPDebug = 0;
-      $mail->isSMTP();
-      $mail->Host = 'smtp.gmail.com';
-      $mail->SMTPAuth = true;
-      $mail->Username = 'jgarvia9@gmail.com';
-      $mail->Password = 'zswa rnsf tpqs yqzy';  
-      $mail->SMTPSecure = 'tls';
-      $mail->Port = 587;
+       $mail->SMTPDebug = 0;
+    $mail->isSMTP();
+    $mail->Host = 'smtp.hostinger.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'apthub@apartmenthub.online';
+    $mail->Password = 'Thirdy_090803';
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port = 587;
       $mail->CharSet = 'UTF-8';
       
       $mail->SMTPOptions = array(
