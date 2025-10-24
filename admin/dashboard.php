@@ -40,184 +40,46 @@ $totalUtilities = $db->countUtilities();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="../assets/css/air.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --primary-dark: #2c3e50;
-      --primary-blue: #3498db;
-      --accent-gold: #d4af37;
-      --warm-beige: #f5f1e8;
-    }
-
-    body {
-      background: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 50%, #f5f1e8 100%);
-      font-family: 'Poppins', sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* Floating glow background */
-    .floating-decoration {
-      position: fixed;
-      border-radius: 50%;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .deco-1 {
-      top: 8%;
-      left: 5%;
-      width: 180px;
-      height: 180px;
-      background: radial-gradient(circle, rgba(212,175,55,0.1), transparent);
-      animation: float 6s ease-in-out infinite;
-    }
-
-    .deco-2 {
-      bottom: 12%;
-      right: 8%;
-      width: 220px;
-      height: 220px;
-      background: radial-gradient(circle, rgba(52,152,219,0.1), transparent);
-      animation: float 7s ease-in-out infinite reverse;
-    }
-
-    @keyframes float {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-25px); }
-    }
-
-    .navbar {
-      background-color: #fff !important;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      z-index: 10;
-    }
-
-    .navbar-brand {
-      color: var(--primary-dark) !important;
-      font-weight: 700;
-      font-size: 1.4rem;
-    }
-
-    .card {
-      border: none;
-      border-radius: 20px;
-      background: linear-gradient(145deg, #ffffff, #f8f5f0);
-      border: 2px solid rgba(212,175,55,0.2);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      position: relative;
-      z-index: 1;
-    }
-
-    h3, h2 {
-      font-weight: 700;
-      color: var(--primary-dark);
-      position: relative;
-      display: inline-block;
-    }
-
-    h3::after, h2::after {
-      content: '';
-      position: absolute;
-      bottom: -6px;
-      left: 0;
-      width: 70px;
-      height: 4px;
-      background: var(--accent-gold);
-      border-radius: 2px;
-    }
-
-    .dashboard-card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-      background: linear-gradient(145deg, #fff, #f9f6f0);
-      border: 1px solid rgba(212,175,55,0.2);
-      border-radius: 20px;
-    }
-
-    .dashboard-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-    }
-
-    .dashboard-card .icon {
-      font-size: 2.2rem;
-      color: var(--primary-blue);
-      transition: transform 0.3s ease, color 0.3s ease;
-    }
-
-    .dashboard-card:hover .icon {
-      transform: scale(1.15);
-      color: var(--accent-gold);
-    }
-
-    .table thead {
-      background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
-      color: #fff;
-    }
-
-    .table tbody tr:hover {
-      background-color: rgba(212,175,55,0.07);
-      transition: background 0.3s ease;
-    }
-
-    .badge.bg-warning {
-      background: linear-gradient(135deg, #f39c12, #e67e22);
-      color: white;
-    }
-
-    .badge.bg-info {
-      background: linear-gradient(135deg, #3498db, #2980b9);
-    }
-
-    .badge.bg-success {
-      background: linear-gradient(135deg, #2ecc71, #27ae60);
-    }
-
-    .btn-outline-danger {
-      border-color: #e74c3c;
-      color: #e74c3c;
-    }
-
-    .btn-outline-danger:hover {
-      background-color: #e74c3c;
-      color: white;
-    }
-
-    hr {
-      border: 1px solid rgba(0,0,0,0.1);
-    }
+    body{font-family:'Poppins',sans-serif}
+    /* Admin cards aligned to site style */
+    .dashboard-card{border:1px solid var(--ah-border);border-radius:16px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.06);transition:transform .2s ease, box-shadow .2s;padding:1rem}
+    .dashboard-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08)}
+    .dashboard-card .icon{font-size:1.8rem;color:var(--ah-brand)}
+    .table thead th{background:#f7f7f7}
+    .table tbody tr:hover{background:#fafafa}
   </style>
 </head>
 <body>
 
-<div class="floating-decoration deco-1"></div>
-<div class="floating-decoration deco-2"></div>
-
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg mb-4">
-  <div class="container">
-    <a class="navbar-brand" href="#"><i class="bi bi-building-fill me-2 text-primary"></i>ApartmentHub Admin</a>
-    <div class="d-flex">
-      <a href="../logout.php" class="btn btn-outline-danger btn-sm">
-        <i class="bi bi-box-arrow-right me-1"></i>Logout
-      </a>
+<!-- HEADER (unified with site) -->
+<header class="header">
+  <div class="container py-3">
+    <div class="d-flex align-items-center justify-content-between">
+      <a class="brand text-decoration-none fs-3" href="dashboard.php">ApartmentHub Admin</a>
+      <div class="d-flex align-items-center gap-2">
+        <a href="change_password.php" class="btn btn-outline-secondary d-none d-md-inline"><i class="bi bi-key"></i> Password</a>
+        <a href="../logout.php" class="btn btn-dark"><i class="bi bi-box-arrow-right me-1"></i>Logout</a>
+      </div>
     </div>
   </div>
-</nav>
+  <div class="pt-2"></div>
+  
+</header>
 
 <!-- MAIN DASHBOARD -->
 <div class="container mb-5">
-  <div class="card p-4 mb-5">
-    <h3>Welcome, <?= htmlspecialchars($fullname ?: 'Admin'); ?>!</h3>
-    <hr>
-    <p>This is your admin dashboard. You can manage tenants, applications, apartments, utilities, and maintenance requests here.</p>
+  <div class="p-3 p-md-4 mb-4 border rounded-3" style="background:#fff;border-color: var(--ah-border) !important;">
+    <h3 class="h4 mb-2">Welcome, <?= htmlspecialchars($fullname ?: 'Admin'); ?>!</h3>
+    <p class="text-muted mb-0">Manage tenants, applications, apartments, utilities, leases, and more.</p>
 
-    <div class="row mt-4">
+    <div class="row mt-3">
       <!-- Manage Tenants -->
       <div class="col-md-3 mb-4">
-        <div class="card text-center h-100 p-3 dashboard-card">
+        <div class="text-center h-100 dashboard-card">
           <div class="mb-2"><i class="bi bi-people-fill icon"></i></div>
           <h5>Manage Tenants</h5>
           <p class="small text-muted"><?= $totalTenants ?> tenants</p>
@@ -227,7 +89,7 @@ $totalUtilities = $db->countUtilities();
 
       <!-- View Applications -->
       <div class="col-md-3 mb-4">
-        <div class="card text-center h-100 p-3 dashboard-card">
+        <div class="text-center h-100 dashboard-card">
           <div class="mb-2"><i class="bi bi-file-earmark-text-fill icon"></i></div>
           <h5>View Applications</h5>
           <p class="small text-muted"><?= $totalApplications ?> applications</p>
@@ -237,7 +99,7 @@ $totalUtilities = $db->countUtilities();
 
       <!-- Add Apartment -->
       <div class="col-md-3 mb-4">
-        <div class="card text-center h-100 p-3 dashboard-card">
+        <div class="text-center h-100 dashboard-card">
           <div class="mb-2"><i class="bi bi-building-fill icon"></i></div>
           <h5>Add Apartment</h5>
           <p class="small text-muted"><?= $totalApartments ?> apartments</p>
@@ -247,7 +109,7 @@ $totalUtilities = $db->countUtilities();
 
       <!-- View Leases -->
       <div class="col-md-3 mb-4">
-        <div class="card text-center h-100 p-3 dashboard-card">
+        <div class="text-center h-100 dashboard-card">
           <div class="mb-2"><i class="bi bi-file-text-fill icon"></i></div>
           <h5>View Leases</h5>
           <p class="small text-muted"><?= $totalLeases ?> active leases</p>
@@ -257,7 +119,7 @@ $totalUtilities = $db->countUtilities();
 
       <!-- Manage Payments -->
       <div class="col-md-3 mb-4">
-        <div class="card text-center h-100 p-3 dashboard-card">
+        <div class="text-center h-100 dashboard-card">
           <div class="mb-2"><i class="bi bi-cash-coin icon"></i></div>
           <h5>Manage Payments</h5>
           <p class="small text-muted">View and update payment records</p>
@@ -267,7 +129,7 @@ $totalUtilities = $db->countUtilities();
 
       <!-- Utilities -->
       <div class="col-md-3 mb-4">
-        <div class="card text-center h-100 p-3 dashboard-card">
+        <div class="text-center h-100 dashboard-card">
           <div class="mb-2"><i class="bi bi-droplet-half icon"></i></div>
           <h5>Utilities</h5>
           <p class="small text-muted"><?= $totalUtilities ?> bills</p>
@@ -277,7 +139,7 @@ $totalUtilities = $db->countUtilities();
 
       <!-- Change Password -->
       <div class="col-md-3 mb-4">
-        <div class="card text-center h-100 p-3 dashboard-card">
+        <div class="text-center h-100 dashboard-card">
           <div class="mb-2"><i class="bi bi-key-fill icon"></i></div>
           <h5>Change Password</h5>
           <p class="small text-muted">Secure your account</p>
@@ -351,6 +213,13 @@ $totalUtilities = $db->countUtilities();
     <?php endif; ?>
   </section>
 </div>
+
+<footer class="footer py-5 mt-4">
+  <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+    <div>&copy; 2025 ApartmentHub Admin</div>
+    <div>Unified UI with ApartmentHub</div>
+  </div>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
