@@ -20,6 +20,7 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    /* your existing CSS unchanged */
     :root {
       --primary-dark: #2c3e50;
       --primary-blue: #3498db;
@@ -30,156 +31,46 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
       --luxury-gold: #c9a961;
       --earth-brown: #8b7355;
     }
-
     body {
       background: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 50%, #f5f1e8 100%);
       font-family: 'Poppins', sans-serif;
       overflow-x: hidden;
     }
-
     .navbar {
       background: linear-gradient(135deg, var(--deep-navy), var(--primary-dark));
       border-bottom: 3px solid var(--accent-gold);
     }
-    .navbar .navbar-toggler {
-      border-color: rgba(255,255,255,0.35);
-    }
-
-    .navbar-brand {
-      color: white !important;
-      font-weight: 700;
-    }
-
-    .nav-link {
-      color: rgba(255,255,255,0.8) !important;
-      transition: .3s;
-    }
-
-    .nav-link:hover {
-      color: var(--accent-gold) !important;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 100px 20px 60px;
-    }
-
-    .hero h1 {
-      font-weight: 800;
-      font-size: clamp(2rem, 3.5vw, 3rem);
-      color: var(--primary-dark);
-    }
-
-    .hero p {
-      font-size: clamp(1rem, 1.8vw, 1.3rem);
-      color: var(--earth-brown);
-      margin: 20px auto 24px;
-      max-width: 900px;
-    }
-
+    .navbar .navbar-toggler { border-color: rgba(255,255,255,0.35); }
+    .navbar-brand { color: white !important; font-weight: 700; }
+    .nav-link { color: rgba(255,255,255,0.8) !important; transition: .3s; }
+    .nav-link:hover { color: var(--accent-gold) !important; }
+    .hero { text-align: center; padding: 100px 20px 60px; }
+    .hero h1 { font-weight: 800; font-size: clamp(2rem, 3.5vw, 3rem); color: var(--primary-dark); }
+    .hero p { font-size: clamp(1rem, 1.8vw, 1.3rem); color: var(--earth-brown); margin: 20px auto 24px; max-width: 900px; }
     .hero .btn {
       background: linear-gradient(135deg, var(--accent-gold), var(--luxury-gold));
-      border: none;
-      color: var(--deep-navy);
-      font-weight: 700;
-      padding: 12px 40px;
-      border-radius: 25px;
+      border: none; color: var(--deep-navy); font-weight: 700;
+      padding: 12px 40px; border-radius: 25px;
     }
-
-    
-
     .apartment-card {
-      border-radius: 20px;
-      overflow: hidden;
-      transition: transform 0.2s ease-in-out;
-      background: white;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      height: 100%;
+      border-radius: 20px; overflow: hidden; transition: transform 0.2s ease-in-out;
+      background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); height: 100%;
       cursor: pointer;
     }
-
-    .apartment-card:hover {
-      transform: scale(1.03);
-    }
-
-    .apartment-card img {
-      height: 200px;
-      width: 100%;
-      display: block;
-      object-fit: cover;
-    }
-
-    .card-body {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .card-title {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .card-text {
-      font-size: 14px;
-      margin-bottom: 8px;
-      flex-grow: 1;
-    }
-
-    .btn-success {
-      font-size: 14px;
-      padding: 8px 15px;
-      border-radius: 10px;
-      margin-top: auto;
-    }
-
-    h2.text-primary {
-      font-size: 28px;
-      text-align: center;
-      font-weight: 700;
-      margin-bottom: 40px;
-    }
-
-    /* Grid Layout - Responsive */
+    .apartment-card:hover { transform: scale(1.03); }
+    .apartment-card img { height: 200px; width: 100%; object-fit: cover; }
+    .card-body { padding: 20px; display: flex; flex-direction: column; }
+    .card-title { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+    .card-text { font-size: 14px; margin-bottom: 8px; flex-grow: 1; }
+    .btn-success { font-size: 14px; padding: 8px 15px; border-radius: 10px; margin-top: auto; }
+    h2.text-primary { font-size: 28px; text-align: center; font-weight: 700; margin-bottom: 40px; }
     .apartment-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 30px;
-      margin-bottom: 50px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px; margin-bottom: 50px;
     }
-
-    /* Mobile: 1 card per row */
-    @media (max-width: 576px) {
-      .apartment-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* Tablet: 2 cards per row */
-    @media (min-width: 577px) and (max-width: 991px) {
-      .apartment-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    /* Desktop: 3 cards per row (pero kung 2 lang flexible padin) */
-    @media (min-width: 992px) {
-      .apartment-grid {
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      }
-    }
-
-    section.container {
-      max-width: 1200px;
-    }
-
     footer {
       background: linear-gradient(135deg, var(--deep-navy), var(--primary-dark));
-      color: white;
-      text-align: center;
-      padding: 30px;
-      margin-top: 80px;
+      color: white; text-align: center; padding: 30px; margin-top: 80px;
       border-top: 3px solid var(--accent-gold);
     }
   </style>
@@ -424,24 +315,20 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-// Check if URL has #loginModal hash
-if (window.location.hash === '#loginModal') {
-    $('#loginModal').modal('show');
-}
 
-// Login Form with SweetAlert
+<script>
+/* ========================
+   LOGIN FUNCTIONALITY
+======================== */
+if (window.location.hash === '#loginModal') $('#loginModal').modal('show');
+
 $('#loginForm').on('submit', function(e) {
   e.preventDefault();
-  
-  // Show loading
   Swal.fire({
     title: 'Logging in...',
     text: 'Please wait',
     allowOutsideClick: false,
-    didOpen: () => {
-      Swal.showLoading();
-    }
+    didOpen: () => Swal.showLoading()
   });
 
   $.ajax({
@@ -462,103 +349,121 @@ $('#loginForm').on('submit', function(e) {
           window.location.href = next && next.length ? next : response.redirect;
         });
       } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Login Failed',
-          text: response.message,
-          confirmButtonColor: '#3498db'
-        });
+        Swal.fire({ icon: 'error', title: 'Login Failed', text: response.message, confirmButtonColor: '#3498db' });
       }
     },
     error: function() {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An error occurred. Please try again.',
-        confirmButtonColor: '#3498db'
-      });
+      Swal.fire({ icon: 'error', title: 'Error', text: 'An error occurred. Please try again.', confirmButtonColor: '#3498db' });
     }
   });
 });
 
-// Toggle password visibility in login modal
-$('#toggleLoginPassword').on('click', function() {
-  const passwordField = $('#loginPassword');
-  const eyeIcon = $('#loginEyeIcon');
-  
-  if (passwordField.attr('type') === 'password') {
-    passwordField.attr('type', 'text');
-    eyeIcon.removeClass('bi-eye').addClass('bi-eye-slash');
-  } else {
-    passwordField.attr('type', 'password');
-    eyeIcon.removeClass('bi-eye-slash').addClass('bi-eye');
-  }
-});
+/* ========================
+   REGISTER FUNCTIONALITY
+======================== */
+$('#registerForm').on('submit', function(e) {
+  e.preventDefault();
 
-// Toggle password visibility in register modal
-$('#toggleRegisterPassword').on('click', function() {
-  const passwordField = $('#registerPassword');
-  const eyeIcon = $('#registerEyeIcon');
-  
-  if (passwordField.attr('type') === 'password') {
-    passwordField.attr('type', 'text');
-    eyeIcon.removeClass('bi-eye').addClass('bi-eye-slash');
-  } else {
-    passwordField.attr('type', 'password');
-    eyeIcon.removeClass('bi-eye-slash').addClass('bi-eye');
-  }
-});
+  Swal.fire({
+    title: 'Registering...',
+    text: 'Please wait while we send your OTP.',
+    allowOutsideClick: false,
+    didOpen: () => Swal.showLoading()
+  });
 
-// Toggle confirm password visibility in register modal
-$('#toggleConfirmPassword').on('click', function() {
-  const passwordField = $('#confirmPassword');
-  const eyeIcon = $('#confirmEyeIcon');
-  
-  if (passwordField.attr('type') === 'password') {
-    passwordField.attr('type', 'text');
-    eyeIcon.removeClass('bi-eye').addClass('bi-eye-slash');
-  } else {
-    passwordField.attr('type', 'password');
-    eyeIcon.removeClass('bi-eye-slash').addClass('bi-eye');
-  }
-});
-
-$(function() {
-  $('#registerForm').on('submit', function(e) {
-    e.preventDefault();
-    $.post('actions/register.php', $(this).serialize(), function(response) {
-      if (response.trim() === 'OTP_SENT') {
+  $.ajax({
+    url: 'actions/register.php',
+    type: 'POST',
+    data: $(this).serialize(),
+    dataType: 'json',
+    success: function(response) {
+      Swal.close();
+      if (response.status === 'success') {
         $('#otpOverlay').fadeIn();
       } else {
-        Swal.fire('Error', response, 'error');
+        Swal.fire('Error', response.message || 'Registration failed.', 'error');
       }
-    });
+    },
+    error: function(xhr) {
+      Swal.close();
+      Swal.fire('Error', 'Request failed: ' + xhr.responseText, 'error');
+    }
+  });
+});
+
+/* ========================
+   OTP VERIFICATION
+======================== */
+$('#otpForm').on('submit', function(e) {
+  e.preventDefault();
+
+  Swal.fire({
+    title: 'Verifying OTP...',
+    allowOutsideClick: false,
+    didOpen: () => Swal.showLoading()
   });
 
-  $('#otpForm').on('submit', function(e) {
-    e.preventDefault();
-    $.post('actions/register.php', $(this).serialize(), function(response) {
-      if (response.trim() === 'OTP_VALID') {
+  $.ajax({
+    url: 'actions/register.php',
+    type: 'POST',
+    data: $(this).serialize(),
+    dataType: 'json',
+    success: function(response) {
+      Swal.close();
+      if (response.status === 'success') {
         $('#otpOverlay').fadeOut();
-        Swal.fire({ icon:'success', title:'Registration complete!', timer:1500, showConfirmButton:false })
-        .then(() => window.location.href = 'index.php');
+        Swal.fire({
+          icon: 'success',
+          title: 'Registration Complete!',
+          timer: 1500,
+          showConfirmButton: false
+        }).then(() => window.location.href = 'index.php');
       } else {
-        Swal.fire('Invalid OTP', 'Please try again.', 'error');
+        Swal.fire('Invalid OTP', response.message || 'Please try again.', 'error');
       }
-    });
+    },
+    error: function(xhr) {
+      Swal.close();
+      Swal.fire('Error', 'Request failed: ' + xhr.responseText, 'error');
+    }
   });
-  
-  // If user clicks Apply while logged out, set the post-login redirect
-  $(document).on('click', '.require-login-apply', function(){
-    var next = $(this).data('next') || 'tenant/view_apartments.php';
-    $('#loginNext').val(next);
-  });
+});
 
-  // If user opens Login from navbar, clear any pending redirect
-  $(document).on('click', '.nav-login-link', function(){
-    $('#loginNext').val('');
-  });
+/* ========================
+   TOGGLE PASSWORD VISIBILITY
+======================== */
+$('#toggleLoginPassword').on('click', function() {
+  const field = $('#loginPassword');
+  const icon = $('#loginEyeIcon');
+  field.attr('type', field.attr('type') === 'password' ? 'text' : 'password');
+  icon.toggleClass('bi-eye bi-eye-slash');
+});
+
+$('#toggleRegisterPassword').on('click', function() {
+  const field = $('#registerPassword');
+  const icon = $('#registerEyeIcon');
+  field.attr('type', field.attr('type') === 'password' ? 'text' : 'password');
+  icon.toggleClass('bi-eye bi-eye-slash');
+});
+
+$('#toggleConfirmPassword').on('click', function() {
+  const field = $('#confirmPassword');
+  const icon = $('#confirmEyeIcon');
+  field.attr('type', field.attr('type') === 'password' ? 'text' : 'password');
+  icon.toggleClass('bi-eye bi-eye-slash');
+});
+
+/* ========================
+   APPLY & LOGIN REDIRECT
+======================== */
+$(document).on('click', '.require-login-apply', function(){
+  var next = $(this).data('next') || 'tenant/view_apartments.php';
+  $('#loginNext').val(next);
+});
+
+$(document).on('click', '.nav-login-link', function(){
+  $('#loginNext').val('');
 });
 </script>
 </body>
-</html> 
+</html>
