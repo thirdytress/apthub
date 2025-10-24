@@ -117,7 +117,7 @@ try {
       $mail->isSMTP();
       $mail->Host = 'smtp.hostinger.com';
       $mail->SMTPAuth = true;
-      $mail->Username = 'apthub@apartmenthub.com';
+      $mail->Username = 'apthub@apartmenthub.online';
       $mail->Password = 'Thirdy_090803';
       $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
       $mail->Port = 587;
@@ -135,7 +135,7 @@ try {
       $mail->Timeout = 30;
       $mail->SMTPDebug = 0; // Set to 2 for debugging
 
-      $mail->setFrom('apthub@apartmenthub.com', 'ApartmentHub');
+      $mail->setFrom('apthub@apartmenthub.online', 'ApartmentHub');
       $mail->addAddress($email, $firstname);
       $mail->isHTML(true);
       $mail->Subject = 'Verify Your Email - ApartmentHub';
@@ -186,7 +186,7 @@ try {
         $welcomeMail->isSMTP();
         $welcomeMail->Host = 'smtp.hostinger.com';
         $welcomeMail->SMTPAuth = true;
-        $welcomeMail->Username = 'apthub@apartmenthub.com';
+        $welcomeMail->Username = 'apthub@apartmenthub.online';
         $welcomeMail->Password = 'Thirdy_090803';
         $welcomeMail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $welcomeMail->Port = 587;
@@ -200,7 +200,7 @@ try {
           ]
         ];
 
-        $welcomeMail->setFrom('apthub@apartmenthub.com', 'ApartmentHub');
+        $welcomeMail->setFrom('apthub@apartmenthub.online', 'ApartmentHub');
         $welcomeMail->addAddress($data['email'], $data['firstname']);
         $welcomeMail->isHTML(true);
         $welcomeMail->Subject = 'Welcome to ApartmentHub!';
