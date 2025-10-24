@@ -190,11 +190,11 @@ if (isset($_POST['action'])) {
       try {
         $welcomeMail->SMTPDebug = 0;
         $welcomeMail->isSMTP();
-        $welcomeMail->Host = 'smtp.gmail.com';
+        $welcomeMail->Host = 'smtp.hostinger.com';
         $welcomeMail->SMTPAuth = true;
-        $welcomeMail->Username = 'jgarvia9@gmail.com';
-        $welcomeMail->Password = 'zswa rnsf tpqs yqzy';
-        $welcomeMail->SMTPSecure = 'tls';
+        $welcomeMail->Username = 'apthub@apartmenthub.online';
+        $welcomeMail->Password = 'Thirdy_090803';
+        $welcomeMail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $welcomeMail->Port = 587;
         $welcomeMail->CharSet = 'UTF-8';
         
@@ -206,7 +206,7 @@ if (isset($_POST['action'])) {
           )
         );
 
-        $welcomeMail->setFrom('jgarvia9@gmail.com', 'ApartmentHub');
+        $welcomeMail->setFrom('apthub@apartmenthub.online', 'ApartmentHub');
         $welcomeMail->addAddress($data['email'], $data['firstname']);
 
         $welcomeMail->isHTML(true);
