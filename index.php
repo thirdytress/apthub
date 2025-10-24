@@ -384,14 +384,10 @@ $('#registerForm').on('submit', function(e) {
         Swal.fire('Error', response.message || 'Registration failed.', 'error');
       }
     },
-    error: function(xhr, status, error) {
-  Swal.close();
-  console.log("XHR:", xhr);
-  console.log("Status:", status);
-  console.log("Error:", error);
-  Swal.fire('Error', 'Request failed: ' + (xhr.responseText || error), 'error');
-}
-
+    error: function(xhr) {
+      Swal.close();
+      Swal.fire('Error', 'Request failed: ' + xhr.responseText, 'error');
+    }
   });
 });
 
