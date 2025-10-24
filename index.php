@@ -239,9 +239,11 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <h5 class="modal-title">Tenant Registration</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
+
       <div class="modal-body">
         <form id="registerForm">
           <input type="hidden" name="action" value="register">
+
           <div class="row g-2">
             <div class="col-md-6">
               <label>First Name</label>
@@ -281,13 +283,24 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="col-md-6">
               <label>Confirm Password</label>
               <div class="input-group">
-                <input type="password" class="form-control" name="confirm_password" id="confirmPassword" required>
+                <!-- FIXED name here -->
+                <input type="password" class="form-control" name="confirm" id="confirmPassword" required>
                 <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
                   <i class="bi bi-eye" id="confirmEyeIcon"></i>
                 </button>
               </div>
             </div>
           </div>
+
+          <div class="text-end mt-4">
+            <button type="submit" class="btn btn-dark px-4">Register</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
           <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
         </form>
