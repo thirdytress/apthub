@@ -28,10 +28,10 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <!-- HEADER (Airbnb-like) -->
 <header class="header">
-  <div class="container py-2">
+  <div class="container py-3">
     <div class="d-flex align-items-center justify-content-between">
       <!-- Brand -->
-      <a class="brand text-decoration-none fs-4" href="index.php">ApartmentHub</a>
+      <a class="brand text-decoration-none fs-3" href="index.php">ApartmentHub</a>
 
       
 
@@ -268,10 +268,10 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 </div>
 
-<footer class="footer py-4 mt-4">
+<footer class="footer py-5 mt-4">
   <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
-    <div class="small">&copy; 2025 ApartmentHub</div>
-    <div class="small">Built with ❤️ using Bootstrap</div>
+    <div>&copy; 2025 ApartmentHub</div>
+    <div>Built with ❤️ using Bootstrap</div>
   </div>
 </footer>
 
