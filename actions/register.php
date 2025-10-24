@@ -60,7 +60,7 @@ if (isset($_POST['action'])) {
         )
       );
 
-      $mail->setFrom('jgarvia9@gmail.com', 'ApartmentHub');
+      $mail->setFrom('apthub@apartmenthub.online', 'ApartmentHub');
       $mail->addAddress($email, $firstname);
 
       $mail->isHTML(true);
