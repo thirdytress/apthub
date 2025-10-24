@@ -7,23 +7,40 @@ use PHPMailer\PHPMailer\Exception;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-// Enable error reporting (for debugging — disable in production)
+// ==========================
+// CONFIGURATION
+// ==========================
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0); // Prevent HTML error output
 
-// Set timezone
 date_default_timezone_set('Asia/Manila');
 
 // Always return JSON
 header('Content-Type: application/json');
 
+// ==========================
+// GLOBAL ERROR HANDLERS
+// ==========================
+set_exception_handler(function ($e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
+    exit;
+});
+
+set_error_handler(function ($severity, $message, $file, $line) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => "PHP Error: $message in $file:$line"]);
+    exit;
+});
+
+// ==========================
+// MAIN LOGIC
+// ==========================
 try {
-    // Validate request method
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         throw new Exception('Invalid request method.');
     }
 
-    // Get email from POST
     $email = trim($_POST['email'] ?? '');
     if (empty($email)) {
         throw new Exception('Email is required.');
@@ -46,13 +63,15 @@ try {
     $token = bin2hex(random_bytes(32));
     $expiry = date('Y-m-d H:i:s', strtotime('+24 hours'));
 
-    // Update user record with token
+    // Store token in database
     $stmt = $conn->prepare("UPDATE tenants SET reset_token = ?, reset_token_expiry = ? WHERE tenant_id = ?");
     if (!$stmt->execute([$token, $expiry, $user['tenant_id']])) {
         throw new Exception('Failed to store reset token in database.');
     }
 
-    // Setup PHPMailer
+    // ==========================
+    // EMAIL SENDING (PHPMailer)
+    // ==========================
     $mail = new PHPMailer(true);
 
     // SMTP settings
@@ -64,7 +83,7 @@ try {
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
 
-    // Allow self-signed SSL certs (optional for local dev)
+    // Optional: for local dev environments
     $mail->SMTPOptions = [
         'ssl' => [
             'verify_peer' => false,
@@ -80,9 +99,10 @@ try {
     $mail->Subject = 'Password Reset Request - ApartmentHub';
 
     // Reset link
-    $resetLink = "http://localhost/aahub-main/reset_password.php?token=" . urlencode($token);
+    // Change this to your live URL when deployed
+    $resetLink = "https://apartmenthub.online/reset_password.php?token=" . urlencode($token);
 
-    // Email body
+    // Email HTML body
     $mail->Body = "
     <html>
     <head>
@@ -160,6 +180,7 @@ try {
     echo json_encode(['success' => true, 'message' => 'Password reset email sent successfully.']);
 
 } catch (Exception $e) {
+    http_response_code(500);
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
 ?>
