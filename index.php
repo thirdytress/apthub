@@ -50,37 +50,10 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </div>
     </div>
   </div>
-  <!-- Categories strip -->
-  <div class="categories">
-    <div class="container">
-      <div class="cat-strip">
-        <a class="cat active" href="#"><i class="bi bi-house"></i><span>All</span></a>
-        <a class="cat" href="#"><i class="bi bi-building"></i><span>Apartments</span></a>
-        <a class="cat" href="#"><i class="bi bi-door-open"></i><span>Studios</span></a>
-        <a class="cat" href="#"><i class="bi bi-tree"></i><span>Balcony</span></a>
-        <a class="cat" href="#"><i class="bi bi-car-front"></i><span>Parking</span></a>
-        <a class="cat" href="#"><i class="bi bi-wifi"></i><span>Fast Wi‑Fi</span></a>
-        <a class="cat" href="#"><i class="bi bi-droplet"></i><span>Pool</span></a>
-        <a class="cat" href="#"><i class="bi bi-shield-check"></i><span>Secure</span></a>
-        <a class="cat" href="#"><i class="bi bi-paw"></i><span>Pet‑friendly</span></a>
-      </div>
-    </div>
-  </div>
 </header>
 
-<!-- Optional top banner -->
-<section class="container pt-4 d-none d-md-block">
-  <div class="p-4 rounded-3" style="background:#f7f7f7;border:1px solid #eaeaea;">
-    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-      <div>
-        <h1 class="h4 mb-1">Find your next stay</h1>
-        <p class="mb-0 text-muted">Explore apartments, studios, and more—just like browsing Airbnb.</p>
-      </div>
-      <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#registerModal">Get started</button>
-    </div>
-  </div>
-  
-</section>
+<!-- Top spacing for content -->
+<div class="pt-3"></div>
 
 <!-- AVAILABLE APARTMENTS SECTION -->
 <section class="container stays">
@@ -107,15 +80,11 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="stay-img">
               <img src="<?= htmlspecialchars($firstImage) ?>" alt="<?= htmlspecialchars($apt['Name']) ?>">
               <?php if ($isOccupied): ?><span class="status-badge">Occupied</span><?php endif; ?>
-              <button type="button" class="wish" onclick="event.stopPropagation();"><i class="bi bi-heart"></i></button>
             </div>
             <div class="stay-info">
-              <div class="stay-row">
-                <div class="title"><?= htmlspecialchars($apt['Name']) ?></div>
-                <div class="rating"><i class="bi bi-star-fill"></i><span>4.8</span></div>
-              </div>
-              <div class="muted text-truncate"><?= htmlspecialchars($apt['Description']) ?></div>
-              <div class="stay-row">
+              <div class="title mb-1"><?= htmlspecialchars($apt['Name']) ?></div>
+              <div class="muted text-truncate mb-1"><?= htmlspecialchars($apt['Description']) ?></div>
+              <div class="d-flex align-items-center justify-content-between">
                 <div class="price">₱<?= number_format($apt['MonthlyRate'], 0) ?><span class="fw-normal text-muted">/month</span></div>
                 <?php if ($isOccupied): ?>
                   <span class="text-muted small">Unavailable</span>
