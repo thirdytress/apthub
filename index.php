@@ -271,7 +271,7 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <footer class="footer py-5 mt-4">
   <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
     <div>&copy; 2025 ApartmentHub</div>
-    <div>Built with ❤️ using Bootstrap</div>
+    
   </div>
 </footer>
 
