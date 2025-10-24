@@ -69,7 +69,7 @@ try {
         $mail->Host = 'smtp.hostinger.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'apthub@apartmenthub.online'; // your Hostinger email
-        $mail->Password = 'YOUR_SMTP_PASSWORD';          // <-- put your actual Hostinger email password here
+        $mail->Password = 'Thirdy_090803';          // <-- put your actual Hostinger email password here
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 
