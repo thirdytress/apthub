@@ -241,16 +241,16 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
           </div>
 
-          
+          <div class="text-end mt-4">
+            <button type="submit" class="btn btn-dark px-4">Register</button>
+          </div>
+
         </form>
       </div>
     </div>
   </div>
 </div>
 
-
-          <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
-        </form>
 
         <!-- OTP OVERLAY -->
         <div id="otpOverlay" style="display:none; position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.6);">
