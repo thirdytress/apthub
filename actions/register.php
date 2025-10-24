@@ -1,4 +1,7 @@
 <?php
+// Catch all errors early
+ob_start();
+
 session_start();
 require_once "../classes/database.php";
 
@@ -8,10 +11,14 @@ use PHPMailer\PHPMailer\Exception;
 // Use absolute path for Hostinger compatibility
 $autoloadPath = __DIR__ . '/../vendor/autoload.php';
 if (!file_exists($autoloadPath)) {
+    ob_end_clean();
     http_response_code(500);
+    header('Content-Type: application/json');
     echo json_encode([
         "status" => "error", 
-        "message" => "Composer autoload not found. Path: " . $autoloadPath
+        "message" => "Composer autoload not found. Please upload the vendor folder to your server.",
+        "path_checked" => $autoloadPath,
+        "current_dir" => __DIR__
     ]);
     exit;
 }
@@ -208,7 +215,19 @@ try {
   }
 
 } catch (Exception $e) {
+  ob_end_clean();
   error_log("General error: " . $e->getMessage());
-  echo json_encode(["status" => "error", "message" => "An unexpected error occurred."]);
+  http_response_code(500);
+  echo json_encode([
+    "status" => "error", 
+    "message" => "An unexpected error occurred: " . $e->getMessage(),
+    "file" => $e->getFile(),
+    "line" => $e->getLine()
+  ]);
+}
+
+// Clean any output buffer
+if (ob_get_length()) {
+    ob_end_clean();
 }
 ?>
