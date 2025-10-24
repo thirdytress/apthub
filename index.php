@@ -18,97 +18,78 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <title>ApartmentHub</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/css/air.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* your existing CSS unchanged */
-    :root {
-      --primary-dark: #2c3e50;
-      --primary-blue: #3498db;
-      --accent-gold: #d4af37;
-      --warm-beige: #f5f1e8;
-      --soft-gray: #95a5a6;
-      --deep-navy: #1a252f;
-      --luxury-gold: #c9a961;
-      --earth-brown: #8b7355;
-    }
-    body {
-      background: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 50%, #f5f1e8 100%);
-      font-family: 'Poppins', sans-serif;
-      overflow-x: hidden;
-    }
-    .navbar {
-      background: linear-gradient(135deg, var(--deep-navy), var(--primary-dark));
-      border-bottom: 3px solid var(--accent-gold);
-    }
-    .navbar .navbar-toggler { border-color: rgba(255,255,255,0.35); }
-    .navbar-brand { color: white !important; font-weight: 700; }
-    .nav-link { color: rgba(255,255,255,0.8) !important; transition: .3s; }
-    .nav-link:hover { color: var(--accent-gold) !important; }
-    .hero { text-align: center; padding: 100px 20px 60px; }
-    .hero h1 { font-weight: 800; font-size: clamp(2rem, 3.5vw, 3rem); color: var(--primary-dark); }
-    .hero p { font-size: clamp(1rem, 1.8vw, 1.3rem); color: var(--earth-brown); margin: 20px auto 24px; max-width: 900px; }
-    .hero .btn {
-      background: linear-gradient(135deg, var(--accent-gold), var(--luxury-gold));
-      border: none; color: var(--deep-navy); font-weight: 700;
-      padding: 12px 40px; border-radius: 25px;
-    }
-    .apartment-card {
-      border-radius: 20px; overflow: hidden; transition: transform 0.2s ease-in-out;
-      background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); height: 100%;
-      cursor: pointer;
-    }
-    .apartment-card:hover { transform: scale(1.03); }
-    .apartment-card img { height: 200px; width: 100%; object-fit: cover; }
-    .card-body { padding: 20px; display: flex; flex-direction: column; }
-    .card-title { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
-    .card-text { font-size: 14px; margin-bottom: 8px; flex-grow: 1; }
-    .btn-success { font-size: 14px; padding: 8px 15px; border-radius: 10px; margin-top: auto; }
-    h2.text-primary { font-size: 28px; text-align: center; font-weight: 700; margin-bottom: 40px; }
-    .apartment-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 30px; margin-bottom: 50px;
-    }
-    footer {
-      background: linear-gradient(135deg, var(--deep-navy), var(--primary-dark));
-      color: white; text-align: center; padding: 30px; margin-top: 80px;
-      border-top: 3px solid var(--accent-gold);
-    }
+    body { font-family: 'Poppins', sans-serif; }
   </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-  <div class="container">
-    <a class="navbar-brand" href="#">ApartmentHub</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item mx-2"><a class="nav-link active" href="#">Home</a></li>
-        <li class="nav-item mx-2"><a class="nav-link" href="about.php">About</a></li>
-  <li class="nav-item mx-2"><a class="nav-link nav-login-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a></li>
-        <li class="nav-item mx-2"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Register</a></li>
-      </ul>
+<!-- HEADER (Airbnb-like) -->
+<header class="header">
+  <div class="container py-2">
+    <div class="d-flex align-items-center justify-content-between">
+      <!-- Brand -->
+      <a class="brand text-decoration-none fs-4" href="index.php">ApartmentHub</a>
+
+      <!-- Search pill (center) -->
+      <form class="search-pill mx-3 flex-grow-1" style="max-width:640px;margin-inline:auto;" action="tenant/view_apartments.php" method="get">
+        <div class="seg">Anywhere</div>
+        <div class="seg">Any week</div>
+        <div class="seg muted">Add guests</div>
+        <button class="btn-search" type="submit" aria-label="Search"><i class="bi bi-search"></i></button>
+      </form>
+
+      <!-- Right controls -->
+      <div class="d-flex align-items-center gap-2">
+        <a href="about.php" class="btn btn-link text-decoration-none text-dark d-none d-md-inline">About</a>
+        <button class="btn btn-outline-secondary nav-login-link d-none d-md-inline" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+        <button class="btn btn-dark d-none d-md-inline" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
+        <button class="btn btn-outline-secondary d-md-none" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="bi bi-person"></i></button>
+      </div>
     </div>
   </div>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="container">
-    <h1>Welcome to ApartmentHub</h1>
-    <p>Find your perfect apartment with ease. Connecting tenants and property managers in one smart platform.</p>
-    <a href="#" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#registerModal">Get Started</a>
+  <!-- Categories strip -->
+  <div class="categories">
+    <div class="container">
+      <div class="cat-strip">
+        <a class="cat active" href="#"><i class="bi bi-house"></i><span>All</span></a>
+        <a class="cat" href="#"><i class="bi bi-building"></i><span>Apartments</span></a>
+        <a class="cat" href="#"><i class="bi bi-door-open"></i><span>Studios</span></a>
+        <a class="cat" href="#"><i class="bi bi-tree"></i><span>Balcony</span></a>
+        <a class="cat" href="#"><i class="bi bi-car-front"></i><span>Parking</span></a>
+        <a class="cat" href="#"><i class="bi bi-wifi"></i><span>Fast Wi‑Fi</span></a>
+        <a class="cat" href="#"><i class="bi bi-droplet"></i><span>Pool</span></a>
+        <a class="cat" href="#"><i class="bi bi-shield-check"></i><span>Secure</span></a>
+        <a class="cat" href="#"><i class="bi bi-paw"></i><span>Pet‑friendly</span></a>
+      </div>
+    </div>
   </div>
+</header>
+
+<!-- Optional top banner -->
+<section class="container pt-4 d-none d-md-block">
+  <div class="p-4 rounded-3" style="background:#f7f7f7;border:1px solid #eaeaea;">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div>
+        <h1 class="h4 mb-1">Find your next stay</h1>
+        <p class="mb-0 text-muted">Explore apartments, studios, and more—just like browsing Airbnb.</p>
+      </div>
+      <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#registerModal">Get started</button>
+    </div>
+  </div>
+  
 </section>
 
 <!-- AVAILABLE APARTMENTS SECTION -->
-<section class="container mt-5">
-  <h2 class="mb-4 text-primary fw-bold">All Apartments</h2>
+<section class="container stays">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h2 class="h5 mb-0">Explore stays</h2>
+    <div class="text-muted small">Showing <?= count($apartments) ?> places</div>
+  </div>
   <div id="message-area"></div>
-  <div class="apartment-grid">
+  <div class="row g-4">
 
     <?php if ($apartments): ?>
       <?php foreach ($apartments as $apt): ?>
@@ -121,26 +102,31 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
           $firstImage = $images[0]['image_path'] ?? 'images/default.jpg';
           $isOccupied = ($apt['Status'] === 'Occupied');
         ?>
-        <div class="apartment-card" data-bs-toggle="modal" data-bs-target="#apartmentModal<?= $apt['ApartmentID'] ?>">
-          <img src="<?= htmlspecialchars($firstImage) ?>" alt="<?= htmlspecialchars($apt['Name']) ?>">
-          <div class="card-body">
-            <h5 class="card-title d-flex justify-content-between align-items-center">
-              <?= htmlspecialchars($apt['Name']) ?>
-              <?php if ($isOccupied): ?>
-                <span class="badge bg-danger">Occupied</span>
-              <?php endif; ?>
-            </h5>
-            <p class="card-text"><?= htmlspecialchars($apt['Description']) ?></p>
-            <p class="card-text"><strong>Monthly Rate:</strong> ₱<?= number_format($apt['MonthlyRate'], 2) ?></p>
-
-            <?php if ($isOccupied): ?>
-              <button class="btn btn-secondary btn-sm" disabled>Currently Occupied</button>
-            <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'tenant'): ?>
-              <a href="tenant/view_apartments.php" class="btn btn-success btn-sm" onclick="event.stopPropagation();">Apply Now</a>
-            <?php else: ?>
-              <button class="btn btn-success btn-sm require-login-apply" data-next="tenant/view_apartments.php" data-bs-toggle="modal" data-bs-target="#loginModal" onclick="event.stopPropagation();">Apply Now</button>
-            <?php endif; ?>
-          </div>
+        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+          <a class="stay-card" href="#" data-bs-toggle="modal" data-bs-target="#apartmentModal<?= $apt['ApartmentID'] ?>">
+            <div class="stay-img">
+              <img src="<?= htmlspecialchars($firstImage) ?>" alt="<?= htmlspecialchars($apt['Name']) ?>">
+              <?php if ($isOccupied): ?><span class="status-badge">Occupied</span><?php endif; ?>
+              <button type="button" class="wish" onclick="event.stopPropagation();"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="stay-info">
+              <div class="stay-row">
+                <div class="title"><?= htmlspecialchars($apt['Name']) ?></div>
+                <div class="rating"><i class="bi bi-star-fill"></i><span>4.8</span></div>
+              </div>
+              <div class="muted text-truncate"><?= htmlspecialchars($apt['Description']) ?></div>
+              <div class="stay-row">
+                <div class="price">₱<?= number_format($apt['MonthlyRate'], 0) ?><span class="fw-normal text-muted">/month</span></div>
+                <?php if ($isOccupied): ?>
+                  <span class="text-muted small">Unavailable</span>
+                <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'tenant'): ?>
+                  <a href="tenant/view_apartments.php" class="apply-link" onclick="event.stopPropagation();">Apply</a>
+                <?php else: ?>
+                  <a href="#" class="apply-link require-login-apply" data-next="tenant/view_apartments.php" onclick="event.stopPropagation();" data-bs-toggle="modal" data-bs-target="#loginModal">Apply</a>
+                <?php endif; ?>
+              </div>
+            </div>
+          </a>
         </div>
 
         <!-- Apartment Modal with Carousel -->
@@ -321,8 +307,11 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 </div>
 
-<footer>
-  <p class="mb-0">&copy; 2025 ApartmentHub. All rights reserved.</p>
+<footer class="footer py-4 mt-4">
+  <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+    <div class="small">&copy; 2025 ApartmentHub</div>
+    <div class="small">Built with ❤️ using Bootstrap</div>
+  </div>
 </footer>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

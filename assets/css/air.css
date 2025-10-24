@@ -1,0 +1,54 @@
+/* Airbnb-inspired UI for ApartmentHub */
+:root{
+  --ah-text:#222;
+  --ah-muted:#717171;
+  --ah-border:#eaeaea;
+  --ah-pill:#f7f7f7;
+  --ah-brand:#ff385c;
+}
+*{box-sizing:border-box}
+body{color:var(--ah-text)}
+
+/* Header */
+.header{position:sticky;top:0;z-index:1030;background:#fff;border-bottom:1px solid var(--ah-border)}
+.header .brand{font-weight:700;color:var(--ah-brand);letter-spacing:.4px}
+
+/* Search pill */
+.search-pill{display:flex;align-items:center;gap:12px;background:var(--ah-pill);border:1px solid var(--ah-border);border-radius:40px;padding:10px 14px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.search-pill .seg{padding:0 12px;border-right:1px solid var(--ah-border);font-weight:500}
+.search-pill .seg:last-child{border-right:0}
+.search-pill .muted{color:var(--ah-muted);font-weight:400}
+.search-pill .btn-search{background:var(--ah-brand);border-radius:50%;color:#fff;display:grid;place-items:center;width:34px;height:34px;border:0}
+
+/* Categories */
+.categories{position:sticky;top:64px;z-index:1020;background:#fff;border-bottom:1px solid var(--ah-border)}
+.cat-strip{display:flex;gap:18px;overflow:auto;padding:14px 12px}
+.cat{display:flex;flex-direction:column;align-items:center;gap:6px;white-space:nowrap;color:var(--ah-muted);font-size:.9rem}
+.cat i{font-size:18px}
+.cat.active{color:#000}
+
+/* Grid cards */
+.stays{padding:24px 0}
+.stay-card{display:block;color:inherit;text-decoration:none}
+.stay-img{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:20/13;background:#f2f2f2}
+.stay-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s ease}
+.stay-card:hover .stay-img img{transform:scale(1.03)}
+.wish{position:absolute;top:10px;right:10px;background:#fff;border-radius:50%;width:36px;height:36px;display:grid;place-items:center;border:1px solid var(--ah-border);color:#000}
+.status-badge{position:absolute;left:10px;top:10px;background:#111;color:#fff;padding:4px 8px;border-radius:999px;font-size:.75rem;opacity:.9}
+
+.stay-info{margin-top:10px}
+.stay-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.title{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:75%}
+.rating{display:flex;align-items:center;gap:4px}
+.rating i{color:#ffb400}
+.muted{color:var(--ah-muted);font-size:.95rem}
+.price{font-weight:600}
+.apply-link{font-size:.9rem}
+
+/* Footer */
+.footer{border-top:1px solid var(--ah-border);background:#fff;color:var(--ah-muted)}
+
+@media (max-width: 991.98px){
+  .search-pill{display:none}
+  .categories{top:56px}
+}
