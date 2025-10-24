@@ -33,13 +33,7 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <!-- Brand -->
       <a class="brand text-decoration-none fs-4" href="index.php">ApartmentHub</a>
 
-      <!-- Search pill (center) -->
-      <form class="search-pill mx-3 flex-grow-1" style="max-width:640px;margin-inline:auto;" action="tenant/view_apartments.php" method="get">
-        <div class="seg">Anywhere</div>
-        <div class="seg">Any week</div>
-        <div class="seg muted">Add guests</div>
-        <button class="btn-search" type="submit" aria-label="Search"><i class="bi bi-search"></i></button>
-      </form>
+      
 
       <!-- Right controls -->
       <div class="d-flex align-items-center gap-2">
