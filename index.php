@@ -247,9 +247,7 @@ $apartments = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
           </div>
 
-          <div class="text-end mt-4">
-            <button type="submit" class="btn btn-dark px-4">Register</button>
-          </div>
+          
         </form>
       </div>
     </div>
