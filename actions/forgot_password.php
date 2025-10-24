@@ -71,7 +71,7 @@ try {
 
     // ==========================
     // EMAIL SENDING (PHPMailer)
-    // ==========================
+    // ==========================a
     $mail = new PHPMailer(true);
 
     // SMTP settings
