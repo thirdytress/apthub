@@ -5,15 +5,28 @@ require_once "../classes/database.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require __DIR__ . '/../vendor/autoload.php';
+// Use absolute path for Hostinger compatibility
+$autoloadPath = __DIR__ . '/../vendor/autoload.php';
+if (!file_exists($autoloadPath)) {
+    http_response_code(500);
+    echo json_encode([
+        "status" => "error", 
+        "message" => "Composer autoload not found. Path: " . $autoloadPath
+    ]);
+    exit;
+}
+require $autoloadPath;
 
 // ====================================
 // CONFIGURATION
 // ====================================
 error_reporting(E_ALL);
-ini_set('display_errors', 0); // hide errors from screen
+ini_set('display_errors', 0); // hide errors from screen in production
 ini_set('log_errors', 1);
-ini_set('error_log', __DIR__ . '/error_log.txt'); // log to file
+
+// For Hostinger, use relative path or /home/username/error_log.txt
+$logPath = __DIR__ . '/error_log.txt';
+ini_set('error_log', $logPath);
 
 date_default_timezone_set('Asia/Manila');
 header('Content-Type: application/json');
@@ -83,10 +96,11 @@ try {
       $mail->SMTPAuth = true;
       $mail->Username = 'apthub@apartmenthub.com';
       $mail->Password = 'Thirdy_090803';
-      $mail->SMTPSecure = 'tls'; // use 'ssl' if tls fails
-      $mail->Port = 587;         // 465 if ssl
+      $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+      $mail->Port = 587;
       $mail->CharSet = 'UTF-8';
-
+      
+      // Disable peer verification for Hostinger
       $mail->SMTPOptions = [
         'ssl' => [
           'verify_peer' => false,
@@ -94,6 +108,9 @@ try {
           'allow_self_signed' => true
         ]
       ];
+      
+      $mail->Timeout = 30;
+      $mail->SMTPDebug = 0; // Set to 2 for debugging
 
       $mail->setFrom('apthub@apartmenthub.com', 'ApartmentHub');
       $mail->addAddress($email, $firstname);
@@ -148,9 +165,10 @@ try {
         $welcomeMail->SMTPAuth = true;
         $welcomeMail->Username = 'apthub@apartmenthub.com';
         $welcomeMail->Password = 'Thirdy_090803';
-        $welcomeMail->SMTPSecure = 'tls';
+        $welcomeMail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $welcomeMail->Port = 587;
         $welcomeMail->CharSet = 'UTF-8';
+        $welcomeMail->Timeout = 30;
         $welcomeMail->SMTPOptions = [
           'ssl' => [
             'verify_peer' => false,

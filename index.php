@@ -391,15 +391,30 @@ $('#registerForm').on('submit', function(e) {
     dataType: 'json',
     success: function(response) {
       Swal.close();
+      console.log('Registration response:', response);
       if (response.status === 'success') {
         $('#otpOverlay').fadeIn();
       } else {
         Swal.fire('Error', response.message || 'Registration failed.', 'error');
       }
     },
-    error: function(xhr) {
+    error: function(xhr, status, error) {
       Swal.close();
-      Swal.fire('Error', 'Request failed: ' + xhr.responseText, 'error');
+      console.error('AJAX Error:', {
+        status: xhr.status,
+        statusText: xhr.statusText,
+        responseText: xhr.responseText,
+        error: error
+      });
+      Swal.fire({
+        icon: 'error',
+        title: 'Request Failed',
+        html: '<strong>Status:</strong> ' + xhr.status + '<br>' +
+              '<strong>Error:</strong> ' + error + '<br>' +
+              '<strong>Response:</strong><br><pre style="text-align:left;max-height:200px;overflow:auto;">' + 
+              (xhr.responseText || 'No response') + '</pre>',
+        width: '600px'
+      });
     }
   });
 });
