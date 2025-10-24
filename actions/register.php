@@ -22,6 +22,9 @@ header('Content-Type: application/json');
 // MAIN LOGIC
 // ====================================
 try {
+  // Debug: Log incoming POST data
+  error_log("POST data received: " . print_r($_POST, true));
+  
   if (!isset($_POST['action'])) {
     echo json_encode(["status" => "error", "message" => "No action specified."]);
     exit;
@@ -35,6 +38,15 @@ try {
   // 1️⃣ REGISTER - SEND OTP
   // ====================================
   if ($action === 'register') {
+    // Validate required fields
+    $required = ['firstname', 'lastname', 'username', 'email', 'phone', 'password'];
+    foreach ($required as $field) {
+      if (empty($_POST[$field])) {
+        echo json_encode(["status" => "error", "message" => "Missing required field: $field"]);
+        exit;
+      }
+    }
+    
     $firstname = trim($_POST['firstname']);
     $lastname  = trim($_POST['lastname']);
     $username  = trim($_POST['username']);
