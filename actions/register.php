@@ -3,17 +3,15 @@
 ob_start();
 
 session_start();
-require_once "../classes/database.php";
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+// Set headers first
+header('Content-Type: application/json');
 
-// Use absolute path for Hostinger compatibility
+// Check vendor folder exists FIRST before loading anything
 $autoloadPath = __DIR__ . '/../vendor/autoload.php';
 if (!file_exists($autoloadPath)) {
     ob_end_clean();
     http_response_code(500);
-    header('Content-Type: application/json');
     echo json_encode([
         "status" => "error", 
         "message" => "Composer autoload not found. Please upload the vendor folder to your server.",
@@ -22,7 +20,26 @@ if (!file_exists($autoloadPath)) {
     ]);
     exit;
 }
+
+// Check database class exists
+$dbPath = __DIR__ . '/../classes/database.php';
+if (!file_exists($dbPath)) {
+    ob_end_clean();
+    http_response_code(500);
+    echo json_encode([
+        "status" => "error", 
+        "message" => "Database class not found.",
+        "path_checked" => $dbPath
+    ]);
+    exit;
+}
+
+// Now load dependencies
 require $autoloadPath;
+require_once $dbPath;
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 // ====================================
 // CONFIGURATION
