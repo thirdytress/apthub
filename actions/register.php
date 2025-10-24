@@ -53,7 +53,6 @@ $logPath = __DIR__ . '/error_log.txt';
 ini_set('error_log', $logPath);
 
 date_default_timezone_set('Asia/Manila');
-header('Content-Type: application/json');
 
 // ====================================
 // MAIN LOGIC
@@ -232,7 +231,6 @@ try {
   }
 
 } catch (Exception $e) {
-  ob_end_clean();
   error_log("General error: " . $e->getMessage());
   http_response_code(500);
   echo json_encode([
@@ -243,8 +241,6 @@ try {
   ]);
 }
 
-// Clean any output buffer
-if (ob_get_length()) {
-    ob_end_clean();
-}
+// Flush and send the output buffer
+ob_end_flush();
 ?>
