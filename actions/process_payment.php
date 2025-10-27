@@ -100,19 +100,83 @@ if (class_exists(PHPMailer::class) && !empty($tenant['email'])) {
         $mail->addAddress($tenant['email'], $tenant['firstname'] ?: 'Tenant');
         $mail->isHTML(true);
         $mail->Subject = 'Payment Receipt - ApartmentHub';
-        $body = "<div style='font-family:Arial,sans-serif'>"
-              . "<h3>Hi " . htmlspecialchars($tenant['firstname'] ?: 'Tenant') . ",</h3>"
-              . "<p>We received your payment.</p>"
-              . "<ul>"
-              . "<li><strong>Payment ID:</strong> " . htmlspecialchars($payment_id) . "</li>"
-              . "<li><strong>Amount:</strong> ₱" . htmlspecialchars($_POST['amount'] ?? '') . "</li>"
-              . "<li><strong>Method:</strong> " . htmlspecialchars($method) . "</li>"
-              . "<li><strong>Reference #:</strong> " . htmlspecialchars($ref ?: '-') . "</li>"
-              . "<li><strong>Date:</strong> " . date('M d, Y h:i A') . "</li>"
-              . "</ul>"
-              . (!empty($receiptPath) ? "<p>Your uploaded proof is attached.</p>" : "")
-              . "<p>Thank you!<br>ApartmentHub</p></div>";
+
+        // Branding and helpful vars
+        $tenantName = htmlspecialchars($tenant['firstname'] ?: 'Tenant');
+        $amountNum = isset($_POST['amount']) ? (float)$_POST['amount'] : 0;
+        $amountDisp = '₱' . number_format($amountNum, 2);
+        $dateDisp = date('M d, Y h:i A');
+
+        // Compute a best-effort absolute link to the payments page
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? '/'), '/\\');
+        $baseBase = (strpos($basePath, '/ahub') !== false) ? '/ahub' : '';
+        $ctaUrl = $scheme . '://' . $host . $baseBase . '/tenant/view_payments.php';
+
+        // Optional embedded logo (if present)
+        $logoPath = __DIR__ . '/../images/logo.png';
+        $hasLogo = false;
+        if (file_exists($logoPath)) {
+            try { $mail->addEmbeddedImage($logoPath, 'logo_cid'); $hasLogo = true; } catch (Exception $e) { /* ignore */ }
+        }
+
+        // Polished HTML email with inline styles (email-client friendly)
+        $body = ""
+            . "<div style='background-color:#f6f9fc;padding:24px;font-family:Arial,Helvetica,sans-serif;color:#111827'>"
+            . "  <div style='max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden'>"
+            . "    <div style='background:#0f172a;padding:14px 20px;color:#fff'>"
+            . ( $hasLogo
+                ? "      <img src=\"cid:logo_cid\" alt=\"ApartmentHub\" style=\"height:28px;vertical-align:middle\">"
+                : "      <span style=\"font-weight:700;font-size:18px;letter-spacing:.3px\">ApartmentHub</span>"
+              )
+            . "    </div>"
+            . "    <div style='padding:22px'>"
+            . "      <h2 style='margin:0 0 8px;font-size:20px;color:#0f172a'>Payment receipt</h2>"
+            . "      <p style='margin:0 0 16px;color:#374151'>Hi " . $tenantName . ", we received your payment. Here are the details:</p>"
+            . "      <table role='presentation' style='width:100%;border-collapse:collapse'>"
+            . "        <tr>"
+            . "          <td style='padding:10px;border:1px solid #e5e7eb;width:40%;color:#6b7280'>Payment ID</td>"
+            . "          <td style='padding:10px;border:1px solid #e5e7eb;color:#111827'>" . htmlspecialchars($payment_id) . "</td>"
+            . "        </tr>"
+            . "        <tr>"
+            . "          <td style='padding:10px;border:1px solid #e5e7eb;color:#6b7280'>Amount</td>"
+            . "          <td style='padding:10px;border:1px solid #e5e7eb;color:#111827'>" . $amountDisp . "</td>"
+            . "        </tr>"
+            . "        <tr>"
+            . "          <td style='padding:10px;border:1px solid #e5e7eb;color:#6b7280'>Method</td>"
+            . "          <td style='padding:10px;border:1px solid #e5e7eb;color:#111827'>" . htmlspecialchars($method) . "</td>"
+            . "        </tr>"
+            . "        <tr>"
+            . "          <td style='padding:10px;border:1px solid #e5e7eb;color:#6b7280'>Reference #</td>"
+            . "          <td style='padding:10px;border:1px solid #e5e7eb;color:#111827'>" . htmlspecialchars($ref ?: '-') . "</td>"
+            . "        </tr>"
+            . "        <tr>"
+            . "          <td style='padding:10px;border:1px solid #e5e7eb;color:#6b7280'>Date</td>"
+            . "          <td style='padding:10px;border:1px solid #e5e7eb;color:#111827'>" . $dateDisp . "</td>"
+            . "        </tr>"
+            . "      </table>"
+            . ( !empty($receiptPath)
+                ? "      <p style='margin:16px 0 0;color:#374151'>Your uploaded proof is attached to this email.</p>"
+                : ""
+              )
+            . "      <div style='margin-top:18px'>"
+            . "        <a href='" . htmlspecialchars($ctaUrl) . "' style='background:#2563eb;color:#fff;text-decoration:none;padding:10px 16px;border-radius:8px;display:inline-block'>View in dashboard</a>"
+            . "      </div>"
+            . "      <p style='font-size:12px;color:#6b7280;margin:16px 0 0'>If you did not make this payment, please contact us at apthub@apartmenthub.online.</p>"
+            . "    </div>"
+            . "    <div style='background:#f3f4f6;padding:12px 20px;color:#6b7280;font-size:12px;text-align:center'>© " . date('Y') . " ApartmentHub</div>"
+            . "  </div>"
+            . "</div>";
         $mail->Body = $body;
+        $mail->AltBody = "Payment receipt\n" .
+            "Payment ID: " . (string)$payment_id . "\n" .
+            "Amount: " . str_replace('₱','',$amountDisp) . " PHP\n" .
+            "Method: " . ($method ?: '-') . "\n" .
+            "Reference #: " . ($ref ?: '-') . "\n" .
+            "Date: " . $dateDisp . "\n\n" .
+            (!empty($receiptPath) ? "Your uploaded proof is attached.\n\n" : '') .
+            "View in dashboard: " . $ctaUrl . "\n";
 
         if (!empty($receiptPath)) {
             $abs = __DIR__ . '/../' . $receiptPath; // convert to filesystem path
