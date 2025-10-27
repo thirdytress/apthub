@@ -133,6 +133,9 @@ $payments = $db->getAllPayments();
 
   <div class="container mt-5">
     <h2 class="text-primary mb-4">Manage Tenant Payments</h2>
+    <?php if (!empty($_GET['msg'])): ?>
+      <div class="alert alert-info border-0 shadow-sm"><?= htmlspecialchars($_GET['msg']) ?></div>
+    <?php endif; ?>
 
     <?php if ($payments): ?>
       <div class="table-responsive">
@@ -143,7 +146,10 @@ $payments = $db->getAllPayments();
               <th>Amount</th>
               <th>Due Date</th>
               <th>Status</th>
+              <th>Method</th>
+              <th>Reference #</th>
               <th>Date Paid</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -153,11 +159,30 @@ $payments = $db->getAllPayments();
               <td>₱<?= number_format($p['amount'],2) ?></td>
               <td><?= date('M d, Y', strtotime($p['due_date'])) ?></td>
               <td>
-                <span class="badge bg-<?= $p['status'] === 'Paid' ? 'success' : 'danger' ?>">
+                <?php
+                  $badge = 'secondary';
+                  if ($p['status'] === 'Paid') $badge = 'success';
+                  elseif ($p['status'] === 'Pending') $badge = 'warning';
+                ?>
+                <span class="badge bg-<?= $badge ?>">
                   <?= htmlspecialchars($p['status']) ?>
                 </span>
               </td>
+              <td><?= htmlspecialchars($p['payment_method'] ?? '-') ?></td>
+              <td><?= htmlspecialchars($p['reference_number'] ?? '-') ?></td>
               <td><?= $p['date_paid'] ? date('M d, Y h:i A', strtotime($p['date_paid'])) : '-' ?></td>
+              <td>
+                <?php if ($p['status'] !== 'Paid'): ?>
+                  <form method="post" action="../actions/clear_payment.php" class="d-inline">
+                    <input type="hidden" name="payment_id" value="<?= (int)$p['payment_id'] ?>">
+                    <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Mark this payment as Paid?');">
+                      Mark as Paid
+                    </button>
+                  </form>
+                <?php else: ?>
+                  <button class="btn btn-sm btn-outline-secondary" disabled>Cleared</button>
+                <?php endif; ?>
+              </td>
             </tr>
           <?php endforeach; ?>
           </tbody>

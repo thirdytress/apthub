@@ -208,7 +208,7 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <h2 class="mb-4">My Rent Payments</h2>
 
     <?php if (isset($_GET['success'])): ?>
-      <div class="alert alert-success shadow-sm border-0">✅ Payment successful!</div>
+      <div class="alert alert-success shadow-sm border-0">✅ Payment submitted! Awaiting admin confirmation.</div>
     <?php elseif (isset($_GET['error'])): ?>
       <div class="alert alert-danger shadow-sm border-0">❌ Payment failed. Please try again.</div>
     <?php endif; ?>
@@ -237,14 +237,16 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <td>
                     <?php if ($pay['status'] === 'Paid'): ?>
                       <span class="badge bg-success">Paid</span>
-                    <?php else: ?>
+                    <?php elseif ($pay['status'] === 'Pending'): ?>
                       <span class="badge bg-warning text-light">Pending</span>
+                    <?php else: ?>
+                      <span class="badge bg-secondary">Unpaid</span>
                     <?php endif; ?>
                   </td>
                   <td><?= htmlspecialchars($pay['payment_method'] ?? '-') ?></td>
                   <td><?= htmlspecialchars($pay['reference_number'] ?? '-') ?></td>
                   <td>
-                    <?php if ($pay['status'] !== 'Paid'): ?>
+                    <?php if ($pay['status'] === 'Unpaid'): ?>
                       <button class="btn btn-primary btn-sm pay-btn"
                               data-id="<?= $pay['payment_id'] ?>"
                               data-amount="<?= $pay['amount'] ?>"
@@ -252,6 +254,8 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                               data-bs-target="#paymentModal">
                         Pay
                       </button>
+                    <?php elseif ($pay['status'] === 'Pending'): ?>
+                      <button class="btn btn-outline-secondary btn-sm" disabled>Pending Review</button>
                     <?php else: ?>
                       <button class="btn btn-success btn-sm" disabled>Paid</button>
                     <?php endif; ?>

@@ -45,12 +45,11 @@ if (!empty($_FILES['gcash_receipt']['name']) && is_uploaded_file($_FILES['gcash_
 
 // Update the payments table (does not assume receipt column exists)
 $stmt = $conn->prepare("
-    UPDATE payments 
-    SET 
-        status = 'Paid', 
-        payment_method = :method, 
-        reference_number = :ref, 
-        date_paid = NOW()
+    UPDATE payments
+    SET
+        status = 'Pending',
+        payment_method = :method,
+        reference_number = :ref
     WHERE payment_id = :pid AND tenant_id = :tenant_id
 ");
 $stmt->execute([
@@ -99,7 +98,7 @@ if (class_exists(PHPMailer::class) && !empty($tenant['email'])) {
         $mail->setFrom('apthub@apartmenthub.online', 'ApartmentHub');
         $mail->addAddress($tenant['email'], $tenant['firstname'] ?: 'Tenant');
         $mail->isHTML(true);
-        $mail->Subject = 'Payment Receipt - ApartmentHub';
+    $mail->Subject = 'Payment Submitted - Awaiting Confirmation | ApartmentHub';
 
         // Branding and helpful vars
         $tenantName = htmlspecialchars($tenant['firstname'] ?: 'Tenant');
@@ -132,8 +131,8 @@ if (class_exists(PHPMailer::class) && !empty($tenant['email'])) {
               )
             . "    </div>"
             . "    <div style='padding:22px'>"
-            . "      <h2 style='margin:0 0 8px;font-size:20px;color:#0f172a'>Payment receipt</h2>"
-            . "      <p style='margin:0 0 16px;color:#374151'>Hi " . $tenantName . ", we received your payment. Here are the details:</p>"
+            . "      <h2 style='margin:0 0 8px;font-size:20px;color:#0f172a'>Payment submitted</h2>"
+            . "      <p style='margin:0 0 16px;color:#374151'>Hi " . $tenantName . ", we received your payment submission. Our team will review and confirm once verified. Here are the details:</p>"
             . "      <table role='presentation' style='width:100%;border-collapse:collapse'>"
             . "        <tr>"
             . "          <td style='padding:10px;border:1px solid #e5e7eb;width:40%;color:#6b7280'>Payment ID</td>"
@@ -169,7 +168,7 @@ if (class_exists(PHPMailer::class) && !empty($tenant['email'])) {
             . "  </div>"
             . "</div>";
         $mail->Body = $body;
-        $mail->AltBody = "Payment receipt\n" .
+        $mail->AltBody = "Payment submitted (awaiting confirmation)\n" .
             "Payment ID: " . (string)$payment_id . "\n" .
             "Amount: " . str_replace('₱','',$amountDisp) . " PHP\n" .
             "Method: " . ($method ?: '-') . "\n" .
