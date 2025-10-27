@@ -269,6 +269,40 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
   </div>
 
+  <!-- Receipt Preview Modal (shown after successful payment) -->
+  <?php $last = $_SESSION['last_payment'] ?? null; if ($last): ?>
+  <div class="modal fade" id="receiptModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 shadow-lg">
+        <div class="modal-header">
+          <h5 class="modal-title">Payment Receipt</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="list-unstyled mb-3">
+            <li><strong>Payment ID:</strong> <?= htmlspecialchars($last['payment_id']) ?></li>
+            <li><strong>Amount:</strong> ₱<?= htmlspecialchars($last['amount']) ?></li>
+            <li><strong>Method:</strong> <?= htmlspecialchars($last['method']) ?></li>
+            <li><strong>Reference #:</strong> <?= htmlspecialchars($last['reference'] ?: '-') ?></li>
+            <li><strong>Date:</strong> <?= date('M d, Y h:i A', strtotime($last['time'])) ?></li>
+          </ul>
+          <?php if (!empty($last['receipt'])): ?>
+            <div class="text-center">
+              <img src="../<?= htmlspecialchars($last['receipt']) ?>" alt="Proof of Payment" class="img-fluid rounded" style="max-height:360px;object-fit:contain;">
+              <div class="mt-2"><a class="btn btn-outline-secondary btn-sm" href="../<?= htmlspecialchars($last['receipt']) ?>" target="_blank">Open Original</a></div>
+            </div>
+          <?php else: ?>
+            <p class="text-muted mb-0">No proof of payment was uploaded.</p>
+          <?php endif; ?>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <?php unset($_SESSION['last_payment']); endif; ?>
+
   <!-- Payment Modal -->
   <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -340,6 +374,12 @@ $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
       paymentMethod.addEventListener('change', function() {
         gcashFields.style.display = this.value === 'GCash' ? 'block' : 'none';
       });
+
+      // If a payment just occurred and session data exists, show receipt modal
+      <?php if (isset($_GET['success']) && $last): ?>
+      const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
+      receiptModal.show();
+      <?php endif; ?>
     });
   </script>
 </body>
