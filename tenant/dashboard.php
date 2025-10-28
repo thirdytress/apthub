@@ -20,6 +20,7 @@ $fullname = $tenant['firstname'] . ' ' . $tenant['lastname'];
 <title>Tenant Dashboard | ApartmentHub</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<link href="../assets/css/air.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
@@ -98,12 +99,18 @@ $fullname = $tenant['firstname'] . ' ' . $tenant['lastname'];
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg">
-  <div class="container">
-    <a class="navbar-brand" href="#"><i class="bi bi-building-fill"></i> ApartmentHub</a>
-    <a href="../logout.php" class="btn btn-logout"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
-  </div>
-</nav>
+<!-- Unified header like the homepage -->
+<header class="header">
+    <div class="container py-3">
+        <div class="d-flex align-items-center justify-content-between">
+            <a class="brand text-decoration-none fs-3" href="dashboard.php">ApartmentHub</a>
+            <div class="d-flex align-items-center gap-2">
+                <a href="update_profile.php" class="btn btn-outline-secondary d-none d-md-inline"><i class="bi bi-person"></i> Profile</a>
+                <a href="../logout.php" class="btn btn-dark"><i class="bi bi-box-arrow-right me-1"></i> Logout</a>
+            </div>
+        </div>
+    </div>
+</header>
 
 <div class="container text-center">
     <div class="welcome">
@@ -233,5 +240,6 @@ $fullname = $tenant['firstname'] . ' ' . $tenant['lastname'];
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/js/theme.js"></script>
 </body>
 </html>
