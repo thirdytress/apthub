@@ -9,6 +9,45 @@
 *{box-sizing:border-box}
 body{color:var(--ah-text)}
 
+/* Global look and feel */
+html, body { font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+body{
+  background: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 50%, #f5f1e8 100%);
+}
+
+/* Buttons */
+.btn-primary{background:linear-gradient(135deg,#3498db,#2c3e50);border:0}
+.btn-primary:hover{filter:brightness(1.05)}
+.btn-success{background:linear-gradient(135deg,#2ecc71,#27ae60)!important;border:0}
+.btn-success:hover{filter:brightness(1.05)}
+.btn-warning{background:linear-gradient(135deg,#f39c12,#e67e22)!important;border:0;color:#fff}
+.btn-outline-secondary{border-color:#c9a961;color:#c9a961}
+.btn-outline-secondary:hover{background:#c9a961;color:#fff}
+
+/* Tables */
+.table thead{background:linear-gradient(135deg,#2c3e50,#3498db);color:#fff}
+.table tbody tr:hover{background:rgba(212,175,55,0.06)}
+
+/* Badges */
+.badge.bg-success{background:linear-gradient(135deg,#27ae60,#2ecc71)!important}
+.badge.bg-warning{background:linear-gradient(135deg,#f39c12,#e67e22)!important;color:#fff!important}
+.badge.bg-secondary{background:linear-gradient(135deg,#95a5a6,#7f8c8d)!important}
+
+/* Cards */
+.card{border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.1);border:1px solid rgba(201,169,97,.25)}
+.card::before{content:'';display:block;height:0}
+
+/* Modals */
+.modal-content{border-radius:16px;border:1px solid rgba(201,169,97,.3);overflow:hidden}
+.modal-header{background:linear-gradient(135deg,#0f172a,#2c3e50);color:#fff}
+.btn-close.btn-close-white{filter:invert(1)}
+
+/* SweetAlert2 */
+.swal2-popup{border-radius:16px;border:1px solid rgba(201,169,97,.3)}
+.swal2-title{font-weight:700;color:#2c3e50}
+.swal2-styled.swal2-confirm{background:linear-gradient(135deg,#3498db,#2c3e50)!important;border:0!important}
+.swal2-styled.swal2-cancel{background:#fff!important;color:#2c3e50!important;border:1px solid #c9a961!important}
+
 /* Header */
 .header{position:sticky;top:0;z-index:1030;background:#fff;border-bottom:1px solid var(--ah-border)}
 .header .brand{font-weight:700;color:var(--ah-brand);letter-spacing:.4px}
