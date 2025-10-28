@@ -30,6 +30,7 @@ $tenants = $db->getAllTenants();
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/css/air.css" rel="stylesheet">
 
   <style>
     :root {
@@ -196,6 +197,17 @@ $tenants = $db->getAllTenants();
 </head>
 
 <body>
+  <header class="header">
+    <div class="container py-3">
+      <div class="d-flex align-items-center justify-content-between">
+        <a class="brand text-decoration-none fs-3" href="dashboard.php">ApartmentHub Admin</a>
+        <div class="d-flex align-items-center gap-2">
+          <a href="dashboard.php" class="btn btn-outline-secondary d-none d-md-inline"><i class="bi bi-arrow-left"></i> Back</a>
+          <a href="../logout.php" class="btn btn-dark"><i class="bi bi-box-arrow-right me-1"></i> Logout</a>
+        </div>
+      </div>
+    </div>
+  </header>
   <div class="floating-decoration deco-1"></div>
   <div class="floating-decoration deco-2"></div>
 
@@ -248,6 +260,7 @@ $tenants = $db->getAllTenants();
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/theme.js"></script>
 </body>
 </html>
 

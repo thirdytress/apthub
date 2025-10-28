@@ -28,6 +28,7 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+   <link href="../assets/css/air.css" rel="stylesheet">
 
   <style>
     :root {
@@ -55,6 +56,17 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
         repeating-linear-gradient(90deg, rgba(212, 175, 55, 0.03) 0px, transparent 1px, transparent 40px, rgba(212, 175, 55, 0.03) 41px),
         repeating-linear-gradient(0deg, rgba(212, 175, 55, 0.03) 0px, transparent 1px, transparent 40px, rgba(212, 175, 55, 0.03) 41px);
       pointer-events: none;
+       <header class="header">
+         <div class="container py-3">
+           <div class="d-flex align-items-center justify-content-between">
+             <a class="brand text-decoration-none fs-3" href="dashboard.php">ApartmentHub</a>
+             <div class="d-flex align-items-center gap-2">
+               <a href="maintenance_request.php" class="btn btn-outline-secondary d-none d-md-inline"><i class="bi bi-plus-lg"></i> New Request</a>
+               <a href="../logout.php" class="btn btn-dark"><i class="bi bi-box-arrow-right me-1"></i> Logout</a>
+             </div>
+           </div>
+         </div>
+       </header>
       z-index: 0;
     }
 
@@ -98,6 +110,7 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
     h2::after {
       content: '';
       position: absolute;
+       <script src="../assets/js/theme.js"></script>
       bottom: -8px;
       left: 0;
       width: 80px;

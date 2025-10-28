@@ -19,6 +19,7 @@ $tenant_id = $_SESSION['user_id'];
   <title>Maintenance Request | ApartmentHub</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="../assets/css/air.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
   <style>
@@ -218,6 +219,19 @@ $tenant_id = $_SESSION['user_id'];
 </head>
 <body>
 
+<!-- Unified header -->
+<header class="header">
+  <div class="container py-3">
+    <div class="d-flex align-items-center justify-content-between">
+      <a class="brand text-decoration-none fs-3" href="dashboard.php">ApartmentHub</a>
+      <div class="d-flex align-items-center gap-2">
+        <a href="view_requests.php" class="btn btn-outline-secondary d-none d-md-inline"><i class="bi bi-list-check"></i> My Requests</a>
+        <a href="../logout.php" class="btn btn-dark"><i class="bi bi-box-arrow-right me-1"></i> Logout</a>
+      </div>
+    </div>
+  </div>
+</header>
+
 <div class="floating-decoration deco-1"></div>
 <div class="floating-decoration deco-2"></div>
 
@@ -252,7 +266,7 @@ $tenant_id = $_SESSION['user_id'];
     </div>
   </div>
 </div>
-
+<script src="../assets/js/theme.js"></script>
 </body>
 </html>
 

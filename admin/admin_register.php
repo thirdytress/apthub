@@ -44,8 +44,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Secure Admin Registration</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/css/air.css" rel="stylesheet">
 </head>
 <body class="bg-light">
+
+<header class="header">
+  <div class="container py-3">
+    <div class="d-flex align-items-center justify-content-between">
+      <a class="brand text-decoration-none fs-3" href="dashboard.php">ApartmentHub Admin</a>
+      <div class="d-flex align-items-center gap-2">
+        <a href="../index.php" class="btn btn-outline-secondary d-none d-md-inline"><i class="bi bi-house"></i> Home</a>
+        <a href="dashboard.php" class="btn btn-dark"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>
+      </div>
+    </div>
+  </div>
+</header>
 
 <div class="container mt-5">
   <div class="card shadow-lg col-md-6 mx-auto">
@@ -82,6 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </div>
 </div>
-
+</div>
+<script src="../assets/js/theme.js"></script>
 </body>
 </html>
